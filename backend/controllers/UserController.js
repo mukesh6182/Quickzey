@@ -3,23 +3,13 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const passport = require('../utils/Passport');
 const sendMail =require("../utils/sendMail");
+const generateToken = require('../utils/generateToken');
 require('dotenv').config();
 /* ======================
    Helpers
 ====================== */
 
 // Generate JWT
-const generateToken = (user) => {
-  return jwt.sign(
-    {
-      id: user._id,
-      email: user.email,
-      role: user.role,
-    },
-    process.env.JWT_SECRET,
-    { expiresIn: '1h' }
-  );
-};
 
 // Generate 6-digit OTP
 const generateOtp = () =>
@@ -66,6 +56,7 @@ const registerManual = async (req, res) => {
 
       return res.status(200).json({ message: 'OTP resent to email. Please verify.' });
     }
+    
 
     // New user
     user = new User({
@@ -99,14 +90,27 @@ const registerManual = async (req, res) => {
    VERIFY EMAIL OTP
 ====================== */
 const verifyEmailOtp = async (req, res) => {
-  try {
+  try {    
     const { email, otp } = req.body;
+
+    if (!email || !otp) {
+      return res.status(400).json({ message: 'Email and OTP are required.' });
+    }
 
     const user = await User.findOne({ email }).select('+emailOtp +emailOtpExpires');
 
-    if (!user) return res.status(400).json({ message: 'Invalid request.' });
+    if (!user) {
+      return res.status(400).json({ message: 'Invalid request.' });
+    }
 
-    if (user.emailOtp !== otp || user.emailOtpExpires < Date.now()) {
+    if (user.isEmailVerified) {
+      return res.status(400).json({ message: 'Email already verified.' });
+    }
+
+    if (
+      String(user.emailOtp) !== String(otp) ||
+      user.emailOtpExpires < Date.now()
+    ) {
       return res.status(400).json({ message: 'Invalid or expired OTP.' });
     }
 
@@ -117,10 +121,13 @@ const verifyEmailOtp = async (req, res) => {
 
     await user.save();
 
-    res.json({ message: 'Email verified successfully.', token: generateToken(user) });
+    res.status(200).json({
+      message: 'Email verified successfully.',
+      token: generateToken(user)
+    });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: error });
+    console.error('Verify OTP Error:', error);
+    res.status(500).json({ message: 'Server error' });
   }
 };
 

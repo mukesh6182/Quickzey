@@ -1,6 +1,6 @@
 // utils/sendMail.js
 const nodemailer = require('nodemailer');
-
+require('dotenv').config();
 const sendMail = async (to, subject, html) => {
   try {
     const transporter = nodemailer.createTransport({
