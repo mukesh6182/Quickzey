@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const passport = require('passport');
-const { registerManual, loginManual, registerGoogle } = require('../controllers/authController');
+const { registerManual, loginManual, registerGoogle } = require('../controllers/UserController');
 
 
 router.post('/register', registerManual);

@@ -1,91 +1,216 @@
 const User = require('../models/User');
-const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const passport = require('passport');
+const bcrypt = require('bcryptjs');
+const passport = require('../utils/Passport');
+const sendMail =require("../utils/sendMail");
 
-// Manual Registration
-exports.registerManual = async (req, res) => {
+/* ======================
+   Helpers
+====================== */
+
+// Generate JWT
+const generateToken = (user) => {
+  return jwt.sign(
+    {
+      id: user._id,
+      email: user.email,
+      role: user.role,
+    },
+    process.env.JWT_SECRET,
+    { expiresIn: '1h' }
+  );
+};
+
+// Generate 6-digit OTP
+const generateOtp = () =>
+  Math.floor(100000 + Math.random() * 900000).toString();
+
+/* ======================
+   MANUAL REGISTER (OTP)
+====================== */
+const registerManual = async (req, res) => {
   try {
-    const { name, email, phone, password, role } = req.body;
+    const { name, email, phone, password } = req.body;
+    const otp = generateOtp();
 
-    // Check if user already exists
+
     let user = await User.findOne({ email });
-    if (user) return res.status(400).json({ message: 'User already exists' });
+    if(!name || !email || !phone || !password ){
+                return res.status(400).json({ message: "Required fields are missing" });        
+            }
+            const EmailExists= await User.findOne({email:email});
+            const PhoneExists= await User.findOne({phone:phone});
+            if(EmailExists ){
+                return res.status(409).json({message:"Email is Already Exists !!"});
+            }
+            if(PhoneExists ){
+                return res.status(409).json({message:"Phone number is Already Exists !!"});
+            }
+    
+    // Existing active user → block
+    if (user && user.status === 'ACTIVE') {
+      return res.status(400).json({ message: 'Email already registered. Please login.' });
+    }
 
-    // Create new user
+    // Existing pending user → resend OTP
+    if (user && user.status === 'PENDING') {
+      user.name = name;
+      user.phone = phone;
+      user.password = password; // model will hash it
+      user.emailOtp = otp;
+      user.emailOtpExpires = Date.now() + 10 * 60 * 1000;
+
+      await user.save();
+
+      // TODO: send OTP email
+
+      return res.status(200).json({ message: 'OTP resent to email. Please verify.' });
+    }
+
+    // New user
     user = new User({
       name,
       email,
       phone,
-      password,
-      role,
+      password, // model hashes
       provider: 'manual',
+      status: 'PENDING',
+      emailOtp: otp,
+      emailOtpExpires: Date.now() + 10 * 60 * 1000,
     });
 
-    // Save user
     await user.save();
-    res.status(201).json({ message: 'User registered successfully' });
+
+    const sendMail = require('../utils/sendMail');
+    const { generateOtpEmail } = require('../utils/generateOtpEmail');
+
+    // After saving user:
+    await sendMail(user.email, 'Verify your Quickzey Account', generateOtpEmail(user.name, otp));
+
+
+    res.status(201).json({ message: 'OTP sent to email. Please verify.' });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Server error' });
   }
 };
 
-// Manual Login
-exports.loginManual = async (req, res) => {
+/* ======================
+   VERIFY EMAIL OTP
+====================== */
+const verifyEmailOtp = async (req, res) => {
+  try {
+    const { email, otp } = req.body;
+
+    const user = await User.findOne({ email }).select('+emailOtp +emailOtpExpires');
+
+    if (!user) return res.status(400).json({ message: 'Invalid request.' });
+
+    if (user.emailOtp !== otp || user.emailOtpExpires < Date.now()) {
+      return res.status(400).json({ message: 'Invalid or expired OTP.' });
+    }
+
+    user.status = 'ACTIVE';
+    user.isEmailVerified = true;
+    user.emailOtp = undefined;
+    user.emailOtpExpires = undefined;
+
+    await user.save();
+
+    res.json({ message: 'Email verified successfully.', token: generateToken(user) });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error.' });
+  }
+};
+
+/* ======================
+   MANUAL LOGIN
+====================== */
+const loginManual = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    // Find user by email
-    let user = await User.findOne({ email });
-    if (!user) return res.status(400).json({ message: 'Invalid credentials' });
+    const user = await User.findOne({ email }).select('+password');
 
-    // Check if password matches
+    if (!user || user.provider !== 'manual') {
+      return res.status(400).json({ message: 'Invalid credentials.' });
+    }
+
+    if (user.status === 'PENDING') {
+      return res.status(403).json({ message: 'Please verify your email first.' });
+    }
+
+    if (user.status === 'DISABLED') {
+      return res.status(403).json({ message: 'Account disabled. Contact support.' });
+    }
+
     const isMatch = await user.matchPassword(password);
-    if (!isMatch) return res.status(400).json({ message: 'Invalid credentials' });
+    if (!isMatch) {
+      return res.status(400).json({ message: 'Invalid credentials.' });
+    }
 
-    // Generate JWT token
-    const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, {
-      expiresIn: '1h',
-    });
-
-    res.json({ token, message: 'Login successful' });
+    res.json({ token: generateToken(user), message: 'Login successful.' });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ message: 'Server error.' });
   }
 };
 
-// Google Registration (after Google OAuth)
-exports.registerGoogle = async (req, res) => {
+/* ======================
+   GOOGLE REGISTER / LOGIN
+====================== */
+const registerGoogle = async (req, res) => {
   try {
     const { googleId, email, name } = req.body;
 
-    // Check if user already exists
-    let user = await User.findOne({ googleId });
+    let user = await User.findOne({ $or: [{ googleId }, { email }] });
+
     if (user) {
-      return res.status(200).json({ message: 'Google login successful', token: generateToken(user) });
+      // Disabled check
+      if (user.status === 'DISABLED') {
+        return res.status(403).json({ message: 'Account disabled. Contact support.' });
+      }
+
+      // Existing Google user → login
+      if (user.googleId) {
+        return res.status(200).json({ message: 'Google login successful.', token: generateToken(user) });
+      }
+
+      // Existing manual user → link Google account
+      user.googleId = googleId;
+      user.isEmailVerified = true;
+      user.status = 'ACTIVE';
+      await user.save();
+
+      return res.status(200).json({ message: 'Google account linked.', token: generateToken(user) });
     }
 
-    // Create new user
+    // New Google user
     user = new User({
       name,
       email,
       googleId,
       provider: 'google',
+      status: 'ACTIVE',
+      isEmailVerified: true,
     });
 
     await user.save();
-    res.status(201).json({ message: 'Google registration successful', token: generateToken(user) });
+
+    res.status(201).json({ message: 'Google registration successful.', token: generateToken(user) });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ message: 'Server error.' });
   }
 };
 
-// Generate JWT Token (for both manual and google login)
-const generateToken = (user) => {
-  return jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, {
-    expiresIn: '1h',
-  });
+/* ======================
+   Export all functions
+====================== */
+module.exports = {
+  registerManual,
+  verifyEmailOtp,
+  loginManual,
+  registerGoogle,
 };

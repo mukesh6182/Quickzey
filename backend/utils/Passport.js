@@ -1,40 +1,44 @@
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const User = require('../models/User');
+require('dotenv').config();
 
-passport.use(new GoogleStrategy({
-  clientID: process.env.GOOGLE_CLIENT_ID,
-  clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-  callbackURL: 'http://localhost:4000/auth/google/callback',
-}, async (token, tokenSecret, profile, done) => {
-  try {
-    const existingUser = await User.findOne({ googleId: profile.id });
-    if (existingUser) {
-      return done(null, existingUser); // User exists, log them in
+
+passport.use(
+  new GoogleStrategy(
+    {
+      clientID: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      callbackURL: process.env.GOOGLE_CALLBACK_URL,
+    },
+    async (accessToken, refreshToken, profile, done) => {
+      try {
+        let user = await User.findOne({ googleId: profile.id });
+
+        if (user) return done(null, user);
+
+        user = await User.create({
+          name: profile.displayName,
+          email: profile.emails[0].value,
+          googleId: profile.id,
+          provider: 'google',
+          status: 'ACTIVE',
+          isEmailVerified: true,
+        });
+
+        done(null, user);
+      } catch (err) {
+        done(err, null);
+      }
     }
-
-    // Create a new user with Google profile data
-    const newUser = new User({
-      name: profile.displayName,
-      email: profile.emails[0].value,
-      googleId: profile.id,
-      provider: 'google',
-    });
-
-    await newUser.save();
-    done(null, newUser);
-  } catch (error) {
-    console.error(error);
-    done(error, null);
-  }
-}));
+  )
+);
 
 passport.serializeUser((user, done) => {
   done(null, user.id);
 });
 
-passport.deserializeUser((id, done) => {
-  User.findById(id, (err, user) => {
-    done(err, user);
-  });
+passport.deserializeUser(async (id, done) => {
+  const user = await User.findById(id);
+  done(null, user);
 });
