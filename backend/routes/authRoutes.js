@@ -1,11 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const passport = require('passport');
-const { registerManual, loginManual, registerGoogle } = require('../controllers/UserController');
+const { registerManual, loginManual, registerGoogle, verifyEmailOtp } = require('../controllers/UserController');
 
 
 router.post('/register', registerManual);
-
+router.post('/register/verify-otp', verifyEmailOtp);
 
 router.post('/login', loginManual);
 

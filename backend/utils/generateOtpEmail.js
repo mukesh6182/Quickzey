@@ -87,3 +87,4 @@ module.exports = {
   generateOtpEmail,
   generateForgotPasswordEmail
 };
+

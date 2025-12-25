@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const passport = require('../utils/Passport');
 const sendMail =require("../utils/sendMail");
-
+require('dotenv').config();
 /* ======================
    Helpers
 ====================== */
@@ -120,7 +120,7 @@ const verifyEmailOtp = async (req, res) => {
     res.json({ message: 'Email verified successfully.', token: generateToken(user) });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Server error.' });
+    res.status(500).json({ message: error });
   }
 };
 

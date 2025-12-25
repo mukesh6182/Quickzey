@@ -2,22 +2,29 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const passport = require('passport');
+const cors=require('cors');
 require('./utils/Passport'); 
 
 const authRoutes = require('./routes/authRoutes'); 
 
 const app = express();
-
 // Middleware
-
 const MONGO_URI = process.env.MONGO_URI;
 
 mongoose.connect(MONGO_URI)
         .then(()=>{console.log("Database Connected Successfully !!!");
         }).catch((err)=>{console.log(`Error : ${err}`);
 });
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(passport.initialize());
+app.use(cors({    
+    origin: [ "http://localhost:4200", "http://127.0.0.1:4200"],
+    methods: ['GET', 'POST', 'PUT', 'DELETE','PATCH'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true 
+}));
+
 
 // Routes
 app.use('/auth', authRoutes);
