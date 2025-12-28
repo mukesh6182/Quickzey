@@ -1,0 +1,184 @@
+/* Core Layout */
+.address-bar {
+  background-color: #ffffff;
+  padding: 0.75rem 0;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  font-family: 'Segoe UI', Roboto, sans-serif;
+}
+
+.text-teal { color: teal; }
+
+/* Back Button */
+.btn-back {
+  background: #f8f9fa;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  width: 35px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: teal;
+  transition: all 0.2s;
+}
+
+.btn-back:hover {
+  background: teal;
+  color: white;
+}
+
+/* Pincode Section */
+.delivery-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.label {
+  font-size: 0.7rem;
+  color: #777;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.pincode-value {
+  font-weight: 700;
+  font-size: 1rem;
+  color: #222;
+}
+
+/* Updated Change Pincode Button */
+.btn-change-pincode {
+  background-color: teal;
+  color: white;
+  font-weight: 600;
+  font-size: 0.85rem;
+  border: none;
+  border-radius: 5px;
+  padding: 4px 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transition: background 0.2s;
+}
+
+.btn-change-pincode:hover {
+  background-color: #006666;
+}
+
+/* Dropdown Styles */
+.dropdown-container {
+  position: relative;
+}
+
+.dropdown-trigger {
+  background: #f0f7f7;
+  border: 1px solid #e0eeee;
+  border-radius: 50px; /* Capsule shape */
+  padding: 5px 12px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.dropdown-trigger:hover {
+  background: #e6f2f2;
+}
+
+.welcome-msg {
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin-right: 8px;
+  color: #333;
+}
+
+.user-icon {
+  font-size: 1.4rem;
+  color: teal;
+}
+
+.arrow-icon {
+  font-size: 0.7rem;
+  color: #888;
+}
+
+/* The Menu Popup */
+.dropdown-menu-custom {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 10px);
+  background: white;
+  min-width: 200px;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+  display: none;
+  flex-direction: column;
+  padding: 10px;
+  z-index: 1100;
+  border: 1px solid #eee;
+}
+
+.dropdown-menu-custom.show { display: flex; }
+
+.menu-header {
+  padding: 8px 12px;
+  font-size: 0.75rem;
+  color: #aaa;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+/* Updated hover style for dropdown items */
+.menu-item {
+  padding: 10px 12px;
+  color: #444;
+  text-decoration: none;
+  font-size: 0.95rem;
+  font-weight: 500;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: 0.2s;
+}
+
+.menu-item {
+  background: whitet;
+  color: teal !important;
+  justify-content: center;
+  margin-bottom: 5px;
+}
+
+.menu-item:hover{
+  background: teal;
+  color: white !important;
+  justify-content: center;
+  margin-bottom: 5px;
+}
+
+.dropdown-divider {
+  height: 1px;
+  background: #eee;
+  margin: 8px 0;
+}
+.btn-teal {
+  background-color: teal;
+  color: white;
+  border: none;
+}
+
+.btn-teal:hover {
+  background-color: #006666;
+}
+
+
+/* RESPONSIVE FIXES */
+@media (max-width: 576px) {
+  .welcome-msg { display: none; }
+  .pincode-value { font-size: 0.85rem; }
+  .dropdown-trigger { padding: 5px 8px; }
+  .dropdown-menu-custom { right: -10px; width: 180px; }
+  .btn-change-pincode { font-size: 0.8rem; padding: 3px 8px; }
+}

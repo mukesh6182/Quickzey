@@ -1,0 +1,67 @@
+<app-header></app-header>
+<div class="register-container container-fluid p-0">
+  <div class="row g-0 align-items-stretch">
+
+    <!-- Left Image -->
+    <div class="col-md-6 d-none d-md-block position-relative">
+      <div class="image-wrapper">
+        <img src="/assets/images/login.png" alt="Login Background">
+      </div>
+    </div>
+
+    <!-- Form Side -->
+    <div class="col-12 col-md-6">
+      <div class="register-form-wrapper d-flex justify-content-center align-items-center h-100">
+
+        <div class="form-card p-4 p-lg-5">
+          <h2 class="fw-bold mb-2 text-dark">Welcome Back</h2>
+          <p class="text-muted mb-4">Login to your account</p>
+
+          <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
+
+            <!-- Email -->
+            <div class="form-floating mb-3">
+              <input type="email" class="form-control" id="email" placeholder="Email" formControlName="email">
+              <label for="email">Email Address</label>
+              <div *ngIf="isInvalid('email')" class="text-danger small mt-1">
+                Please enter a valid email.
+              </div>
+            </div>
+
+            <!-- Password -->
+            <div class="form-floating mb-4">
+              <input type="password" class="form-control" id="pass" placeholder="Password" formControlName="password">
+              <label for="pass">Password</label>
+              <div *ngIf="isInvalid('password')" class="text-danger small mt-1">
+                Password must be at least 6 characters.
+              </div>
+            </div>
+
+            <!-- Login Button -->
+            <button class="btn btn-primary w-100 btn-lg mb-3" [disabled]="loginForm.invalid">
+              Login
+            </button>
+
+          </form>
+
+          <div class="divider text-center my-3">
+            <span class="bg-white px-2 text-muted">OR</span>
+          </div>
+
+          <!-- Google Login -->
+          <button class="btn btn-google w-100 mb-3" (click)="loginWithGoogle()">
+            <img src="/assets/images/google.svg" alt="google" width="20" class="me-2">
+            Login with Google
+          </button>
+
+          <p class="text-center mt-2">
+            Don't have an account? 
+            <a routerLink="/register" class="text-decoration-none fw-bold text-primary">Register</a>
+          </p>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
