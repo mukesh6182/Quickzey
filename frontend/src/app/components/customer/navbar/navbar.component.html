@@ -1,17 +1,29 @@
-<nav class="navbar">
-  <a routerLink="/" class="logo">QuickZey</a>
-  <a routerLink="/">Home</a>
-  <a routerLink="/categories">Categories</a>
-  <!-- <a routerLink="/cart">Cart ({{ cartCount }})</a> -->
-   <a routerLink="/cart">Cart 15</a>
-
-  <!-- <div class="user-dropdown" *ngIf="user">
-    <span (click)="toggleDropdown()">user.name ▼</span>
-    <ul *ngIf="showDropdown">
-      <li routerLink="/orders">Orders</li>
-      <li routerLink="/profile">Profile</li>
-      <li routerLink="/change-password">Change Password</li>
-      <li (click)="logout()">Logout</li>
-    </ul>
-  </div> -->
+<!-- Floating Bottom Navbar -->
+<nav class="floating-bottom-navbar">
+  <ul class="nav justify-content-around">
+    <li class="nav-item">
+      <a routerLink="/" routerLinkActive="active" class="nav-link text-center">
+        <i class="bi bi-house-fill"></i>
+        <span class="nav-text">Home</span>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a routerLink="/categories" routerLinkActive="active" class="nav-link text-center">
+        <i class="bi bi-grid-fill"></i>
+        <span class="nav-text">Categories</span>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a routerLink="/cart" routerLinkActive="active" class="nav-link text-center">
+        <i class="bi bi-cart-fill"></i>
+        <span class="nav-text">Cart</span>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a routerLink="/orders" routerLinkActive="active" class="nav-link text-center">
+        <i class="bi bi-bag-fill"></i>
+        <span class="nav-text">Orders</span>
+      </a>
+    </li>
+  </ul>
 </nav>

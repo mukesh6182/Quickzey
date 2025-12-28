@@ -1,2 +1,33 @@
-<h1>Welcome to Quickzey!</h1>
-<p>This is the customer home page.</p>
+<div class="container my-4">
+  <!-- Banner Carousel -->
+  <div id="homeBannerCarousel" class="carousel slide mx-auto" data-bs-ride="carousel" data-bs-interval="3000" style="max-width: 100%; border-radius: 5px; overflow: hidden;">
+
+    <!-- Indicators / Dots -->
+    <div class="carousel-indicators">
+      <button type="button" data-bs-target="#homeBannerCarousel" data-bs-slide-to="0" class="active" aria-label="Slide 1"></button>
+      <button type="button" data-bs-target="#homeBannerCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+      <button type="button" data-bs-target="#homeBannerCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+    </div>
+
+    <!-- Carousel slides -->
+    <div class="carousel-inner">
+      <div class="carousel-item active">
+        <div class="carousel-img-container">
+          <img src="/assets/images/fb1.png" class="carousel-img" alt="Banner 1">
+        </div>
+      </div>
+      <div class="carousel-item">
+        <div class="carousel-img-container">
+          <img src="/assets/images/fb2.png" class="carousel-img" alt="Banner 2">
+        </div>
+      </div>
+      <div class="carousel-item">
+        <div class="carousel-img-container">
+          <img src="/assets/images/fb3.png" class="carousel-img" alt="Banner 3">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-category></app-category>

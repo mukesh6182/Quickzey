@@ -1,0 +1,80 @@
+/* Section heading */
+.category-heading {
+  font-weight: 700;
+  font-size: 1.8rem;
+  color: #222;
+}
+
+/* Category box */
+.category-box {
+  background-color: #ffffff;
+  border: 1px solid #e6e6e6;
+  border-radius: 12px;
+  padding: 18px 10px;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+  cursor: pointer;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Hover effect (subtle & professional) */
+.category-box:hover {
+  border-color: teal;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
+}
+
+/* Image wrapper to fix transparent PNG background */
+.category-img-wrapper {
+  background-color: #ffffff; /* forces white background */
+  border-radius: 50%;        /* circular container */
+  padding: 10px;             /* spacing around image */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 10px;
+  width: 80px;
+  height: 80px;
+  transition: transform 0.3s ease;
+}
+
+/* Image inside wrapper */
+.category-img-wrapper img {
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
+}
+
+/* Hover pop effect for image */
+.category-box:hover .category-img-wrapper {
+  transform: scale(1.1); /* image slightly pops */
+}
+
+/* Category name */
+.category-name {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+  text-align: center;
+}
+
+/* Mobile optimization */
+@media (max-width: 576px) {
+  .category-img-wrapper {
+    width: 65px;
+    height: 65px;
+    padding: 8px;
+  }
+
+  .category-img-wrapper img {
+    width: 50px;
+    height: 50px;
+  }
+
+  .category-name {
+    font-size: 0.85rem;
+  }
+}
