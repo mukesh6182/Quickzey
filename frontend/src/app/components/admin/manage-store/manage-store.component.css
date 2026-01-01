@@ -1,0 +1,120 @@
+/* ---------- Tabs Styling ---------- */
+.store-tabs {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  gap: 10px;
+}
+
+.store-tabs .nav-link {
+  color: teal; /* Default text color */
+  font-weight: 600;
+  border-radius: 8px; /* Smooth rectangle corners */
+  padding: 10px 20px;
+  border: 1px solid teal; /* Outline rectangle */
+  background-color: white; /* Default background */
+  transition: all 0.3s ease; /* Smooth hover transition */
+  cursor: pointer;
+}
+
+.store-tabs .nav-link.active {
+  background-color: teal;
+  color: white;
+  border-color: teal;
+}
+
+.store-tabs .nav-link:hover {
+  background-color: teal;
+  color: white;
+  border-color: teal;
+}
+
+/* ---------- Tab Content ---------- */
+.tab-content {
+  margin-top: 20px;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ---------- Table Styling ---------- */
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+table th, table td {
+  text-align: center;
+  vertical-align: middle;
+  padding: 12px 8px;
+}
+
+table th {
+  background-color: teal;
+  color: white;
+  font-weight: 600;
+}
+
+table tr:nth-child(even) {
+  background-color: #f6f6f6;
+}
+
+table tr:hover {
+  background-color: #b2dfdb; /* Slight teal hover */
+}
+
+/* ---------- Modal Inputs ---------- */
+.modal-body .form-control {
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  margin-bottom: 12px;
+  padding: 10px 14px;
+  transition: all 0.3s;
+}
+
+.modal-body .form-control:focus {
+  border-color: teal;
+  box-shadow: 0 0 8px rgba(0,128,128,0.2);
+}
+
+/* ---------- Buttons ---------- */
+.btn-warning {
+  background-color: #ffc107;
+  border: none;
+  color: #212529;
+  transition: all 0.3s;
+}
+
+.btn-warning:hover {
+  background-color: #e0a800;
+  color: white;
+}
+
+.btn-danger {
+  background-color: #dc3545;
+  border: none;
+  transition: all 0.3s;
+}
+
+.btn-danger:hover {
+  background-color: #c82333;
+  color: white;
+}
+
+.btn-secondary {
+  background-color: #6c757d;
+  border: none;
+  transition: all 0.3s;
+}
+
+.btn-secondary:hover {
+  background-color: #5a6268;
+  color: white;
+}

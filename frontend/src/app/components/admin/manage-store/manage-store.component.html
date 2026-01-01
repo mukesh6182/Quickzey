@@ -1,0 +1,133 @@
+<div class="container mt-5">
+  <h2 class="text-center mb-4">Manage Stores</h2>
+
+  <ul class="nav nav-tabs justify-content-center store-tabs">
+    <li class="nav-item">
+      <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#active">Active</button>
+    </li>
+    <li class="nav-item">
+      <button class="nav-link" data-bs-toggle="tab" data-bs-target="#inactive">Inactive</button>
+    </li>
+    <li class="nav-item">
+      <button class="nav-link" data-bs-toggle="tab" data-bs-target="#maintenance">Maintenance</button>
+    </li>
+  </ul>
+
+  <div class="tab-content mt-4">
+
+    <!-- ACTIVE -->
+    <div class="tab-pane fade show active" id="active">
+      <table class="table table-bordered table-hover">
+        <thead class="table-light">
+          <tr>
+            <th>Name</th>
+            <th>Code</th>
+            <th>Address</th>
+            <th>Working Hours</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let store of activeStores">
+            <td>{{ store.name }}</td>
+            <td>{{ store.storeCode }}</td>
+            <td>{{ formatAddress(store) }}</td>
+            <td>{{ getWorkingHours(store) }}</td>
+            <td>
+              <button class="btn btn-warning btn-sm me-2" (click)="openEdit(store)">Update</button>
+              <button class="btn btn-danger btn-sm me-2" (click)="deleteStore(store._id)">Delete</button>
+              <button class="btn btn-secondary btn-sm" (click)="maintenance(store._id)">Maintenance</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- INACTIVE -->
+    <div class="tab-pane fade" id="inactive">
+      <table class="table table-bordered table-hover">
+        <thead class="table-light">
+          <tr>
+            <th>Name</th>
+            <th>Code</th>
+            <th>Address</th>
+            <th>Working Hours</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let store of inactiveStores">
+            <td>{{ store.name }}</td>
+            <td>{{ store.storeCode }}</td>
+            <td>{{ formatAddress(store) }}</td>
+            <td>{{ getWorkingHours(store) }}</td>
+            <td>
+              <button class="btn btn-warning btn-sm me-2" (click)="openEdit(store)">Update</button>
+              <button class="btn btn-danger btn-sm me-2" (click)="deleteStore(store._id)">Delete</button>
+              <button class="btn btn-secondary btn-sm" (click)="maintenance(store._id)">Maintenance</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- MAINTENANCE -->
+    <div class="tab-pane fade" id="maintenance">
+      <table class="table table-bordered table-hover">
+        <thead class="table-light">
+          <tr>
+            <th>Name</th>
+            <th>Code</th>
+            <th>Address</th>
+            <th>Working Hours</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let store of maintenanceStores">
+            <td>{{ store.name }}</td>
+            <td>{{ store.storeCode }}</td>
+            <td>{{ formatAddress(store) }}</td>
+            <td>{{ getWorkingHours(store) }}</td>
+            <td>
+              <button class="btn btn-warning btn-sm me-2" (click)="openEdit(store)">Update</button>
+              <button class="btn btn-danger btn-sm me-2" (click)="deleteStore(store._id)">Delete</button>
+              <button class="btn btn-secondary btn-sm" (click)="maintenance(store._id)">Maintenance</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT MODAL -->
+<div #editModal class="modal fade">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5>Update Store</h5>
+        <button class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="editForm">
+          <input class="form-control mb-2" placeholder="Name" formControlName="name">
+          <input class="form-control mb-2" placeholder="Store Code" formControlName="storeCode">
+          <input class="form-control mb-2" placeholder="Line 1" formControlName="line1">
+          <input class="form-control mb-2" placeholder="Area" formControlName="area">
+          <input class="form-control mb-2" placeholder="City" formControlName="city">
+          <input class="form-control mb-2" placeholder="Pincode" formControlName="pincode">
+          <input class="form-control mb-2" placeholder="State" formControlName="state">
+          <select class="form-select mb-2" formControlName="status">
+            <option value="ACTIVE">ACTIVE</option>
+            <option value="INACTIVE">INACTIVE</option>
+            <option value="MAINTENANCE">MAINTENANCE</option>
+          </select>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" (click)="updateStore()">Update</button>
+      </div>
+    </div>
+  </div>
+</div>

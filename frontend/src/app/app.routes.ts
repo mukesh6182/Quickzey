@@ -9,6 +9,8 @@ import { VerifyOtpComponent } from './components/auth/verify-otp/verify-otp.comp
 import { AdminLayoutComponent } from './components/layout/admin-layout/admin-layout.component';
 import { Component } from '@angular/core';
 import { AdminDashboardComponent } from './components/admin/admin-dashboard/admin-dashboard.component';
+import { AddStoreComponent } from './components/admin/add-store/add-store.component';
+import { ManageStoreComponent } from './components/admin/manage-store/manage-store.component';
 
 export const routes: Routes = [
 
@@ -28,7 +30,9 @@ export const routes: Routes = [
     path:'admin',
     component:AdminLayoutComponent,
     children:[ 
-      { path: '',component :AdminDashboardComponent }
+      { path: '',component :AdminDashboardComponent },
+      { path: 'add-store' ,component:AddStoreComponent },
+      { path: 'manage-store', component:ManageStoreComponent }
     ]
   },
 
