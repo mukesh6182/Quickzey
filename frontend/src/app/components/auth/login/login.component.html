@@ -1,4 +1,30 @@
 <app-header></app-header>
+<!-- Toast Message -->
+<div *ngIf="toastMessage" class="modern-toast-wrapper">
+  <div class="modern-toast-card shadow-lg" [ngClass]="toastType">
+    
+    <div class="toast-accent"></div>
+    
+    <div class="toast-content">
+      <div class="toast-icon">
+        <i *ngIf="toastType === 'success'" class="fas fa-check-circle"></i>
+        <i *ngIf="toastType === 'danger'" class="fas fa-exclamation-circle"></i>
+      </div>
+      
+      <div class="toast-body-text">
+        <strong class="toast-status text-uppercase">
+          {{ toastType === 'success' ? 'Success' : 'Attention' }}
+        </strong>
+        <p class="toast-msg-content">{{ toastMessage }}</p>
+      </div>
+
+      <button type="button" class="btn-toast-close" (click)="toastMessage=null">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+  </div>
+</div>
+
 <div class="register-container container-fluid p-0">
   <div class="row g-0 align-items-stretch">
 

@@ -22,7 +22,9 @@ router.get('/google/callback',
   async (req, res) => {
     try {
       const token = generateToken(req.user);
-      res.redirect(`http://localhost:4200`);
+      const { name, role } = req.user;
+      // Pass token, name, and role to the frontend via query parameters
+      res.redirect(`http://localhost:4200/auth/google/callback?token=${token}&name=${name}&role=${role}`);
     } catch (err) {
       console.error(err);
       res.redirect('/');

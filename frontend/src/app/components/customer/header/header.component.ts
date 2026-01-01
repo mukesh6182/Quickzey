@@ -71,13 +71,36 @@ export class HeaderComponent implements OnInit {
       }
     }
   }
+  toastMessage: string | null = null;
+  toastType: string = 'success'; // 'success', 'danger', 'warning', etc.
 
-  logout() {
-    localStorage.removeItem('userName');
+logout() {
+    // 1. Clear the storage
+    if (isPlatformBrowser(this.platformId)) {
+      localStorage.removeItem('userName');
+      localStorage.removeItem('customerPincode'); // Optional: clear pincode on logout?
+    }
+
+    // 2. Reset local variables
     this.userName = 'Guest';
     this.isDropdownOpen = false;
+
+    // 3. Trigger the Toast Message
+    this.showToast('You have been successfully logged out!', 'success');
+    
+    // 4. Optional: Redirect to home or login
+    // this.router.navigate(['/login']);
   }
 
+  showToast(message: string, type: string) {
+    this.toastMessage = message;
+    this.toastType = type;
+
+    // Auto-hide after 3 seconds
+    setTimeout(() => {
+      this.toastMessage = null;
+    }, 3000);
+  }
   goBack() {
     window.history.back();
   }

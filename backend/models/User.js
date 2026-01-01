@@ -76,6 +76,14 @@ const userSchema = new mongoose.Schema(
       type: Date,
       select: false,
     },
+    isAssignedToStore: {
+      type: Boolean,
+      default: false,
+      required: function () {
+        return this.role === 'STORE_MANAGER';
+      },
+    },
+
   },
   { timestamps: true }
 );

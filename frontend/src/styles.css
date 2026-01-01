@@ -1,6 +1,28 @@
-/* ===== Global Styles ===== */
+:root {
+  --primary: #16a085;
+  --primary-dark: #0e6655;
+  --sidebar-width: 260px;
+  --sidebar-collapsed: 70px;
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
 
-/* Reset some default styles */
+body {
+  margin: 0;    
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  line-height: 1.6;
+  background-color: #f9f9f9;
+  color: #333;
+}
+
+/* Helper for the sub-menu arrow */
+.arrow-icon {
+  transition: transform 0.3s;
+  margin-left: auto;
+}
+.rotate-180 {
+  transform: rotate(180deg);
+}
+/* Include your toast and button styles here as you provided */
 * {
   margin: 0;
   padding: 0;
@@ -8,12 +30,7 @@
 }
 
 /* Set a global font */
-body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  line-height: 1.6;
-  background-color: #f9f9f9;
-  color: #333;
-}
+
 
 /* Links */
 a {
@@ -33,4 +50,99 @@ a {
 .btn-teal:hover {
   background-color: #004d4d;
   color: #fff;
+}
+/* Container positioning */
+.toast-wrapper {
+  position: fixed;
+  top: 25px;
+  right: 25px; /* Professional standard is often top-right */
+  z-index: 9999;
+  perspective: 1000px;
+}
+
+/* The Toast Card */
+.toast-card {
+  background: #ffffff;
+  min-width: 320px;
+  max-width: 400px;
+  border-radius: 8px;
+  display: flex;
+  position: relative;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08); /* Soft professional shadow */
+  overflow: hidden;
+  animation: slideInRight 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* Left Accent Border */
+.toast-accent {
+  width: 5px;
+  background: #00b894; /* Default Success color */
+}
+
+.toast-card.danger .toast-accent { background: #ff7675; }
+.toast-card.success .toast-accent { background: #00b894; }
+
+/* Content Layout */
+.toast-content-wrapper {
+  display: flex;
+  align-items: center;
+  padding: 16px 20px;
+  width: 100%;
+}
+
+.toast-icon {
+  font-size: 24px;
+  margin-right: 15px;
+}
+
+.success .toast-icon { color: #00b894; }
+.danger .toast-icon { color: #ff7675; }
+
+/* Typography */
+.toast-text {
+  flex-grow: 1;
+}
+
+.toast-title {
+  display: block;
+  font-weight: 700;
+  font-size: 14px;
+  color: #2d3436;
+  margin-bottom: 2px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.toast-message {
+  margin: 0;
+  font-size: 13px;
+  color: #636e72;
+  line-height: 1.4;
+}
+
+/* Close Button */
+.toast-close {
+  background: none;
+  border: none;
+  color: #b2bec3;
+  cursor: pointer;
+  padding: 5px;
+  transition: 0.2s;
+  align-self: flex-start;
+}
+
+.toast-close:hover {
+  color: #2d3436;
+}
+
+/* Professional Slide Animation */
+@keyframes slideInRight {
+  from {
+    transform: translateX(110%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
 }

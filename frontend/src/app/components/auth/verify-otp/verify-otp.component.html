@@ -1,0 +1,44 @@
+<app-header></app-header>
+
+<!-- Toast -->
+<div *ngIf="toastMessage" class="modern-toast-wrapper">
+  <div class="modern-toast-card shadow-lg" [ngClass]="toastType">
+    <div class="toast-accent"></div>
+    <div class="toast-content">
+      <div class="toast-icon">
+        <i *ngIf="toastType === 'success'" class="fas fa-check-circle"></i>
+        <i *ngIf="toastType === 'danger'" class="fas fa-exclamation-circle"></i>
+      </div>
+      <div class="toast-body-text">
+        <strong class="toast-status text-uppercase">{{ toastType === 'success' ? 'Success' : 'Attention' }}</strong>
+        <p class="toast-msg-content">{{ toastMessage }}</p>
+      </div>
+      <button type="button" class="btn-toast-close" (click)="toastMessage=null">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="otp-container container">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card p-4 shadow form-card">
+        <h3 class="mb-3 text-center">Verify OTP</h3>
+        <p class="text-muted text-center">Enter the 6-digit OTP sent to your email: <strong>{{ email }}</strong></p>
+
+        <form [formGroup]="otpForm" (ngSubmit)="verifyOtp()">
+          <div class="form-floating mb-3">
+            <input type="text" class="form-control" placeholder="OTP" formControlName="otp">
+            <label>OTP</label>
+            <div *ngIf="isInvalid('otp')" class="text-danger small mt-1">
+              <span *ngIf="otpForm.get('otp')?.errors?.['required']">OTP is required.</span>
+              <span *ngIf="otpForm.get('otp')?.errors?.['pattern']">OTP must be 6 digits.</span>
+            </div>
+          </div>
+          <button class="btn btn-primary w-100" [disabled]="otpForm.invalid || isSubmitting">Verify OTP</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

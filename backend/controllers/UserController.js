@@ -1,19 +1,14 @@
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-const passport = require('../utils/Passport');
-const sendMail =require("../utils/sendMail");
-const generateToken = require('../utils/generateToken');
 require('dotenv').config();
-/* ======================
-   Helpers
-====================== */
+const sendMail = require("../utils/sendMail");
+const generateToken = require('../utils/generateToken');
 
-// Generate JWT
+
 
 // Generate 6-digit OTP
-const generateOtp = () =>
-  Math.floor(100000 + Math.random() * 900000).toString();
+const generateOtp = () => Math.floor(100000 + Math.random() * 900000).toString();
 
 /* ======================
    MANUAL REGISTER (OTP)
@@ -23,68 +18,82 @@ const registerManual = async (req, res) => {
     const { name, email, phone, password } = req.body;
     const otp = generateOtp();
 
-
-    let user = await User.findOne({ email });
-    if(!name || !email || !phone || !password ){
-                return res.status(400).json({ message: "Required fields are missing" });        
-            }
-            const EmailExists= await User.findOne({email:email});
-            const PhoneExists= await User.findOne({phone:phone});
-            if(EmailExists ){
-                return res.status(409).json({message:"Email is Already Exists !!"});
-            }
-            if(PhoneExists ){
-                return res.status(409).json({message:"Phone number is Already Exists !!"});
-            }
-    
-    // Existing active user → block
-    if (user && user.status === 'ACTIVE') {
-      return res.status(400).json({ message: 'Email already registered. Please login.' });
+    if (!name || !email || !phone || !password) {
+      return res.status(400).json({ message: "Required fields are missing" });
     }
 
-    // Existing pending user → resend OTP
-    if (user && user.status === 'PENDING') {
-      user.name = name;
-      user.phone = phone;
-      user.password = password; // model will hash it
-      user.emailOtp = otp;
-      user.emailOtpExpires = Date.now() + 10 * 60 * 1000;
-
-      await user.save();
-
-      // TODO: send OTP email
-
-      return res.status(200).json({ message: 'OTP resent to email. Please verify.' });
+    if (!/^[0-9]{10}$/.test(phone)) {
+      return res.status(400).json({ message: 'Phone must be 10 digits' });
     }
-    
 
-    // New user
-    user = new User({
+    const EmailExists = await User.findOne({ email });
+    const PhoneExists = await User.findOne({ phone });
+
+    // ✅ NEW LOGIC (ONLY ADDITION)
+    if (EmailExists) {
+      if (EmailExists.status === 'PENDING') {
+        // update OTP & resend
+        EmailExists.emailOtp = otp;
+        EmailExists.emailOtpExpires = Date.now() + 10 * 60 * 1000;
+
+        await EmailExists.save();
+
+        const { generateOtpEmail } = require('../utils/generateOtpEmail');
+        await sendMail(
+          EmailExists.email,
+          'Verify your Quickzey Account',
+          generateOtpEmail(EmailExists.name, otp)
+        );
+
+        return res.status(200).json({
+          message: 'OTP sent again. Please verify your email.'
+        });
+      }
+
+      // email exists but not pending
+      return res.status(409).json({ message: "Email already exists!" });
+    }
+
+    if (PhoneExists) {
+      return res.status(409).json({ message: "Phone number already exists!" });
+    }
+
+    // ✅ Normal new registration (unchanged)
+    const user = new User({
       name,
       email,
       phone,
-      password, // model hashes
+      password,
       provider: 'manual',
       status: 'PENDING',
       emailOtp: otp,
       emailOtpExpires: Date.now() + 10 * 60 * 1000,
+      role: 'CUSTOMER'
     });
 
     await user.save();
 
-    const sendMail = require('../utils/sendMail');
     const { generateOtpEmail } = require('../utils/generateOtpEmail');
-
-    // After saving user:
-    await sendMail(user.email, 'Verify your Quickzey Account', generateOtpEmail(user.name, otp));
-
+    await sendMail(
+      user.email,
+      'Verify your Quickzey Account',
+      generateOtpEmail(user.name, otp)
+    );
 
     res.status(201).json({ message: 'OTP sent to email. Please verify.' });
+
   } catch (error) {
     console.error(error);
+
+    if (error.name === 'ValidationError') {
+      const errors = Object.values(error.errors).map(err => err.message);
+      return res.status(400).json({ message: 'Validation failed', errors });
+    }
+
     res.status(500).json({ message: 'Server error' });
   }
 };
+
 
 /* ======================
    VERIFY EMAIL OTP
@@ -99,18 +108,9 @@ const verifyEmailOtp = async (req, res) => {
 
     const user = await User.findOne({ email }).select('+emailOtp +emailOtpExpires');
 
-    if (!user) {
-      return res.status(400).json({ message: 'Invalid request.' });
-    }
-
-    if (user.isEmailVerified) {
-      return res.status(400).json({ message: 'Email already verified.' });
-    }
-
-    if (
-      String(user.emailOtp) !== String(otp) ||
-      user.emailOtpExpires < Date.now()
-    ) {
+    if (!user) return res.status(400).json({ message: 'Invalid request.' });
+    if (user.isEmailVerified) return res.status(400).json({ message: 'Email already verified.' });
+    if (String(user.emailOtp) !== String(otp) || user.emailOtpExpires < Date.now()) {
       return res.status(400).json({ message: 'Invalid or expired OTP.' });
     }
 
@@ -123,7 +123,9 @@ const verifyEmailOtp = async (req, res) => {
 
     res.status(200).json({
       message: 'Email verified successfully.',
-      token: generateToken(user)
+      token: generateToken(user),
+      name: user.name,
+      role: user.role || 'CUSTOMER'
     });
   } catch (error) {
     console.error('Verify OTP Error:', error);
@@ -144,20 +146,18 @@ const loginManual = async (req, res) => {
       return res.status(400).json({ message: 'Invalid credentials.' });
     }
 
-    if (user.status === 'PENDING') {
-      return res.status(403).json({ message: 'Please verify your email first.' });
-    }
-
-    if (user.status === 'DISABLED') {
-      return res.status(403).json({ message: 'Account disabled. Contact support.' });
-    }
+    if (user.status === 'PENDING') return res.status(403).json({ message: 'Please verify your email first.' });
+    if (user.status === 'DISABLED') return res.status(403).json({ message: 'Account disabled. Contact support.' });
 
     const isMatch = await user.matchPassword(password);
-    if (!isMatch) {
-      return res.status(400).json({ message: 'Invalid credentials.' });
-    }
+    if (!isMatch) return res.status(400).json({ message: 'Invalid credentials.' });
 
-    res.json({ token: generateToken(user), message: 'Login successful.' });
+    res.json({ 
+      token: generateToken(user), 
+      name: user.name,
+      role: user.role || 'CUSTOMER',
+      message: 'Login successful.'
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Server error.' });
@@ -174,14 +174,16 @@ const registerGoogle = async (req, res) => {
     let user = await User.findOne({ $or: [{ googleId }, { email }] });
 
     if (user) {
-      // Disabled check
-      if (user.status === 'DISABLED') {
-        return res.status(403).json({ message: 'Account disabled. Contact support.' });
-      }
+      if (user.status === 'DISABLED') return res.status(403).json({ message: 'Account disabled. Contact support.' });
 
       // Existing Google user → login
       if (user.googleId) {
-        return res.status(200).json({ message: 'Google login successful.', token: generateToken(user) });
+        return res.status(200).json({
+          message: 'Google login successful.',
+          token: generateToken(user),
+          name: user.name,
+          role: user.role || 'CUSTOMER'
+        });
       }
 
       // Existing manual user → link Google account
@@ -190,7 +192,12 @@ const registerGoogle = async (req, res) => {
       user.status = 'ACTIVE';
       await user.save();
 
-      return res.status(200).json({ message: 'Google account linked.', token: generateToken(user) });
+      return res.status(200).json({
+        message: 'Google account linked.',
+        token: generateToken(user),
+        name: user.name,
+        role: user.role || 'CUSTOMER'
+      });
     }
 
     // New Google user
@@ -201,17 +208,44 @@ const registerGoogle = async (req, res) => {
       provider: 'google',
       status: 'ACTIVE',
       isEmailVerified: true,
+      role: 'CUSTOMER'
     });
 
     await user.save();
 
-    res.status(201).json({ message: 'Google registration successful.', token: generateToken(user) });
+    res.status(201).json({
+      message: 'Google registration successful.',
+      token: generateToken(user),
+      name: user.name,
+      role: user.role || 'CUSTOMER'
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Server error.' });
   }
 };
 
+const getAvailableManagers = async (req, res) => {
+  try {
+    const managers = await User.find({
+      role: 'STORE_MANAGER',
+      isAssignedToStore: false,
+      status: 'ACTIVE', // optional
+    }).select('name'); // only _id and name will be returned
+
+    res.status(200).json({
+      success: true,
+      count: managers.length,
+      data: managers,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: 'Server error while fetching available managers',
+    });
+  }
+};
 /* ======================
    Export all functions
 ====================== */
@@ -220,4 +254,5 @@ module.exports = {
   verifyEmailOtp,
   loginManual,
   registerGoogle,
+  getAvailableManagers,
 };

@@ -1,3 +1,21 @@
+<div *ngIf="toastMessage" class="toast-wrapper">
+  <div class="toast-card" [ngClass]="toastType">
+    <div class="toast-accent"></div>
+    <div class="toast-content-wrapper">
+      <div class="toast-icon">
+        <i *ngIf="toastType === 'success'" class="fas fa-check-circle"></i>
+        <i *ngIf="toastType === 'danger'" class="fas fa-exclamation-circle"></i>
+      </div>
+      <div class="toast-text">
+        <span class="toast-title">Success</span>
+        <p class="toast-message">{{ toastMessage }}</p>
+      </div>
+      <button class="toast-close" (click)="toastMessage=null">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+  </div>
+</div>
 <div class="address-bar border-bottom">
   <div class="container-fluid d-flex justify-content-between align-items-center gap-2">
 

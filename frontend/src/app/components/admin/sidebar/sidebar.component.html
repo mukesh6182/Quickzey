@@ -1,0 +1,31 @@
+<aside class="sidebar" [class.collapsed]="isCollapsed" [class.open]="isMobileOpen">
+  <div class="logo">
+    <i class="fa fa-bolt"></i> <span>Quickzey</span>
+  </div>
+
+  <ul class="nav-list">
+    <li class="menu-item">
+      <div class="nav-link" (click)="toggleMenu('store')">
+        <i class="fa fa-store"></i>
+        <span class="link-text">Store</span>
+        <i class="fa fa-chevron-down arrow-icon" [class.rotate-180]="activeMenu === 'store'"></i>
+      </div>
+      <ul class="submenu" [class.show]="activeMenu === 'store'">
+        <li><a routerLink="/admin/add-store" class="sub-link">Add Store</a></li>
+        <li><a routerLink="/admin/manage-store" class="sub-link">Manage Store</a></li>
+      </ul>
+    </li>
+
+    <li class="menu-item">
+      <div class="nav-link" (click)="toggleMenu('categories')">
+        <i class="fa fa-tags"></i>
+        <span class="link-text">Categories</span>
+        <i class="fa fa-chevron-down arrow-icon" [class.rotate-180]="activeMenu === 'categories'"></i>
+      </div>
+      <ul class="submenu" [class.show]="activeMenu === 'categories'">
+        <li><a routerLink="/admin/add-categories" class="sub-link">Add Categories</a></li>
+        <li><a routerLink="/admin/manage-categories" class="sub-link">Manage Categories</a></li>
+      </ul>
+    </li>
+  </ul>
+</aside>

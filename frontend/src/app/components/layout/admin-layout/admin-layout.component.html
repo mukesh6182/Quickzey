@@ -1,0 +1,20 @@
+<div class="admin-wrapper">
+    <div class="overlay" *ngIf="isMobileOpen" (click)="isMobileOpen = false"></div>
+
+      <app-sidebar [isCollapsed]="isCollapsed" [isMobileOpen]="isMobileOpen"></app-sidebar>
+
+      <div class="main-content" [class.shifted]="!isCollapsed">
+        <header class="top-nav">
+          <button class="toggle-btn" (click)="handleToggle()">
+            <i class="fa fa-bars"></i>
+          </button>
+          <span class="header-title">Admin Dashboard</span>
+        </header>
+
+        <div class="content-area">
+          <router-outlet></router-outlet>
+        </div>
+        </div>
+        
+    </div>
+<app-footer></app-footer>
