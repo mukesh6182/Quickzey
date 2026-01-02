@@ -1,5 +1,24 @@
-<aside class="sidebar" [class.collapsed]="isCollapsed" [class.open]="isMobileOpen">
+<!-- Toast Message -->
+<div *ngIf="toastMessage" class="toast-wrapper">
+  <div class="toast-card" [ngClass]="toastType">
+    <div class="toast-accent"></div>
+    <div class="toast-content-wrapper">
+      <div class="toast-icon">
+        <i *ngIf="toastType === 'success'" class="fas fa-check-circle"></i>
+        <i *ngIf="toastType === 'danger'" class="fas fa-exclamation-circle"></i>
+      </div>
+      <div class="toast-text">
+        <span class="toast-title">Success</span>
+        <p class="toast-message">{{ toastMessage }}</p>
+      </div>
+      <button class="toast-close" (click)="toastMessage=null">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+  </div>
+</div>
 
+<aside class="sidebar" [class.collapsed]="isCollapsed" [class.open]="isMobileOpen">
   <!-- Logo -->
   <div class="logo" routerLink="/admin">
     <i class="fa fa-bolt"></i> <span>Quickzey</span>
@@ -7,7 +26,6 @@
 
   <!-- Navigation -->
   <ul class="nav-list">
-
     <!-- Dashboard -->
     <li class="menu-item dashboard-item">
       <a routerLink="/admin" class="nav-link">
@@ -43,6 +61,13 @@
         <li><a routerLink="/admin/manage-categories" class="sub-link">Manage Categories</a></li>
       </ul>
     </li>
-
+        <li class="menu-item dashboard-item">
+      <a  (click)="logout()" href="/" class="nav-link">
+        <i class="fas fa-sign-out-alt"></i>
+        <span class="link-text">Logout</span>
+      </a>
+    </li>
   </ul>
 </aside>
+
+    

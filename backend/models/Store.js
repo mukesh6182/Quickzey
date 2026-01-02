@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const User = require('../models/User');
 
 const storeSchema = new mongoose.Schema(
   {
@@ -14,7 +15,8 @@ const storeSchema = new mongoose.Schema(
       unique: true,
       uppercase: true,
       trim: true,
-    },    
+    },
+
     servedPincodes: {
       type: [String], // e.g. ["380071", "380072"]
       required: true,
@@ -22,41 +24,23 @@ const storeSchema = new mongoose.Schema(
     },
 
     address: {
-      line1: {
-        type: String,
-        required: true,
-      },
-      line2: {
-        type: String,
-      },
-      area: {
-        type: String,
-      },
-      city: {
-        type: String,
-        required: true,
-      },
-      pincode: {
-        type: String,
-        required: true,
-      },
-      state: {
-        type: String,
-        required: true,
-      },
+      line1: { type: String, required: true },  // mandatory      
+      area: { type: String, required: true },  // mandatory
+      city: { type: String, required: true },  // mandatory
+      pincode: { type: String, required: true }, // mandatory
+      state: { type: String, required: true }, // mandatory
     },
 
     workingHours: {
-    open: {
-        type: String, // "08:00"
+      open: {
+        type: String,
         default: '08:00',
-    },
-    close: {
-        type: String, // "23:00"
+      },
+      close: {
+        type: String,
         default: '23:00',
+      },
     },
-    },
-
 
     status: {
       type: String,

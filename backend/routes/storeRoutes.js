@@ -10,21 +10,24 @@ const {
   setMaintenance
 } = require('../controllers/StoreController');
 
-const { authMiddleware } = require('../utils/authMiddleware');
-const { authorizeRole }=require('../utils/authorizeRole');
+const {getAvailableManagers} = require('../controllers/UserController');
+const authMiddleware = require('../utils/authMiddleware');
+const authorizeRole = require('../utils/authorizeRole');
 
-router.post("/add-store", authMiddleware, authorizeRole("admin"), addStore);
 
-router.get("/last-store-code", authMiddleware, authorizeRole("admin"), getLastStoreCode);
+router.post("/add-store", authMiddleware, authorizeRole("ADMIN"), addStore);
 
-router.get("/get-stores", authMiddleware, authorizeRole("admin"), getAllStores);
+router.get("/last-store-code", authMiddleware, authorizeRole("ADMIN"), getLastStoreCode);
 
-router.get("/get-store/:id", authMiddleware, authorizeRole("admin"), getStore);
+router.get("/get-stores", authMiddleware, authorizeRole("ADMIN"), getAllStores);
+router.get("/get-managers", authMiddleware, authorizeRole("ADMIN"), getAvailableManagers);
 
-router.put("/update-store/:id", authMiddleware, authorizeRole("admin"), updateStore);
+router.get("/get-store/:id", authMiddleware, authorizeRole("ADMIN"), getStore);
 
-router.delete("/delete-store/:id", authMiddleware, authorizeRole("admin"), deleteStore);
+router.put("/update-store/:id", authMiddleware, authorizeRole("ADMIN"), updateStore);
 
-router.post("/maintenance-store/:id", authMiddleware, authorizeRole("admin"), setMaintenance);
+router.delete("/delete-store/:id", authMiddleware, authorizeRole("ADMIN"), deleteStore);
+
+router.post("/maintenance-store/:id", authMiddleware, authorizeRole("ADMIN"), setMaintenance);
 
 module.exports = router;

@@ -1,120 +1,115 @@
-/* ---------- Tabs Styling ---------- */
+/* ---------- Tabs ---------- */
 .store-tabs {
   display: flex;
   justify-content: center;
-  margin-top: 20px;
-  gap: 10px;
+  margin-bottom: 1rem;
 }
 
 .store-tabs .nav-link {
-  color: teal; /* Default text color */
-  font-weight: 600;
-  border-radius: 8px; /* Smooth rectangle corners */
-  padding: 10px 20px;
-  border: 1px solid teal; /* Outline rectangle */
-  background-color: white; /* Default background */
-  transition: all 0.3s ease; /* Smooth hover transition */
   cursor: pointer;
+  font-weight: 600;
+  color: gray;
+  border: none;
+  padding: 10px 20px;
 }
 
 .store-tabs .nav-link.active {
-  background-color: teal;
-  color: white;
-  border-color: teal;
+  background-color: #16a085 !important;
+  color: white !important;
+  border-radius: 5px;
 }
-
 .store-tabs .nav-link:hover {
-  background-color: teal;
-  color: white;
-  border-color: teal;
+  background-color: #16a085 !important;
+  color: white !important;
 }
 
-/* ---------- Tab Content ---------- */
-.tab-content {
-  margin-top: 20px;
-  animation: fadeIn 0.5s ease-in-out;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* ---------- Table Styling ---------- */
-table {
+/* ---------- Table Styling (Desktop) ---------- */
+.custom-table {
   width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
+  border-collapse: collapse;
   border-radius: 10px;
   overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  box-shadow: 0 0 5px rgba(0,0,0,0.1);
+  font-family: 'Arial', sans-serif;
+  background-color: white;
 }
 
-table th, table td {
+.custom-table th {
+  background-color: #16a085;
+  color: #fff;
+  font-weight: bold;
+  padding: 12px 15px;
+  text-align: center;
+}
+
+.custom-table td {
+  padding: 12px 15px;
   text-align: center;
   vertical-align: middle;
-  padding: 12px 8px;
+  border-bottom: 1px solid #eee;
 }
 
-table th {
-  background-color: teal;
-  color: white;
-  font-weight: 600;
+.custom-table tr:nth-child(even) {
+  background-color: #f3f3f3;
 }
 
-table tr:nth-child(even) {
-  background-color: #f6f6f6;
+.custom-table tr:hover {
+  background-color: #d1f0e3;
 }
 
-table tr:hover {
-  background-color: #b2dfdb; /* Slight teal hover */
+/* Action Buttons */
+.action-buttons {
+  display: flex;
+  gap: 5px;
+  justify-content: center;
+  flex-wrap: wrap;
 }
 
-/* ---------- Modal Inputs ---------- */
-.modal-body .form-control {
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  margin-bottom: 12px;
-  padding: 10px 14px;
-  transition: all 0.3s;
+/* ---------- Mobile Cards ---------- */
+.mobile-cards {
+  display: none; /* hidden on desktop */
 }
 
-.modal-body .form-control:focus {
-  border-color: teal;
-  box-shadow: 0 0 8px rgba(0,128,128,0.2);
+.store-card {
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 15px;
+  margin-bottom: 15px;
+  background: #fff;
+  box-shadow: 0 0 5px rgba(0,0,0,0.1);
+  font-family: 'Arial', sans-serif;
 }
 
-/* ---------- Buttons ---------- */
-.btn-warning {
-  background-color: #ffc107;
-  border: none;
-  color: #212529;
-  transition: all 0.3s;
+.store-card div {
+  margin-bottom: 8px;
 }
 
-.btn-warning:hover {
-  background-color: #e0a800;
-  color: white;
+.store-card .action-buttons {
+  display: flex;
+  gap: 5px;
+  justify-content: flex-start;
+  margin-top: 10px;
 }
 
-.btn-danger {
-  background-color: #dc3545;
-  border: none;
-  transition: all 0.3s;
-}
+/* ---------- Responsive Design ---------- */
+@media (max-width: 768px) {
+  /* Hide table on mobile */
+  .custom-table {
+    display: none;
+  }
 
-.btn-danger:hover {
-  background-color: #c82333;
-  color: white;
-}
+  /* Show mobile cards */
+  .mobile-cards {
+    display: block;
+  }
 
-.btn-secondary {
-  background-color: #6c757d;
-  border: none;
-  transition: all 0.3s;
-}
+  /* Table controls stacked */
+  .table-controls {
+    flex-direction: column;
+    gap: 10px;
+  }
 
-.btn-secondary:hover {
-  background-color: #5a6268;
-  color: white;
+  .mat-form-field {
+    width: 100% !important;
+  }
 }

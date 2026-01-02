@@ -1,5 +1,5 @@
-const User = require('../models/user.model');
-const Store = require('../models/store.model');
+const User = require('../models/User');
+const Store = require('../models/Store');
 
 // Get last added storeCode
 const getLastStoreCode = async (req, res) => {
@@ -29,13 +29,17 @@ const addStore = async (req, res) => {
       name,
       storeCode,
       servedPincodes,
-      address,
-      workingHours,
+      line1,
+      area,
+      city,
+      pincode,
+      state,
       status,
       manager,
     } = req.body;
 
-    if (!name || !storeCode || !servedPincodes || !address || !manager) {
+    // Validate required fields
+    if (!name || !storeCode || !servedPincodes || !line1 || !area || !city || !pincode || !state || !manager) {
       return res.status(400).json({ message: 'Missing required fields' });
     }
 
@@ -48,14 +52,18 @@ const addStore = async (req, res) => {
       return res.status(409).json({ message: 'Store with this storeCode already exists' });
     }
 
+    const address = { line1, area, city, pincode, state };
+
     const store = await Store.create({
       name,
       storeCode,
       servedPincodes,
       address,
-      workingHours,
       status,
       manager,
+    });
+    await User.findByIdAndUpdate(manager, {
+      isAssignedToStore: true,
     });
 
     return res.status(201).json({
@@ -78,7 +86,7 @@ const getAllStores = async (req, res) => {
     const { status } = req.query; // e.g., ?status=ACTIVE
     const query = status ? { status } : {};
     const stores = await Store.find(query)
-      .populate('manager', 'name'); // show manager name
+      .populate('manager', 'name');
 
     res.status(200).json({
       success: true,
@@ -91,7 +99,7 @@ const getAllStores = async (req, res) => {
   }
 };
 
-// Get particular store by ID
+// Get store by ID
 const getStore = async (req, res) => {
   try {
     const { id } = req.params;
@@ -109,6 +117,7 @@ const getStore = async (req, res) => {
 };
 
 // Update store by ID
+// Update store by ID
 const updateStore = async (req, res) => {
   try {
     const { id } = req.params;
@@ -119,9 +128,17 @@ const updateStore = async (req, res) => {
       return res.status(404).json({ success: false, message: 'Store not found' });
     }
 
-    // Update fields
-    Object.keys(updates).forEach((key) => {
-      store[key] = updates[key];
+    // Handle address updates separately
+    if (updates.address) {
+      const addressFields = ['line1', 'area', 'city', 'pincode', 'state'];
+      addressFields.forEach(field => {
+        if (updates.address[field] !== undefined) store.address[field] = updates.address[field];
+      });
+    }
+
+    // Update other fields
+    ['name', 'storeCode', 'servedPincodes', 'status', 'manager'].forEach(field => {
+      if (updates[field] !== undefined) store[field] = updates[field];
     });
 
     await store.save();
@@ -137,7 +154,7 @@ const updateStore = async (req, res) => {
   }
 };
 
-// Soft delete store (update status to INACTIVE)
+// Soft delete store (mark INACTIVE)
 const deleteStore = async (req, res) => {
   try {
     const { id } = req.params;
@@ -156,6 +173,7 @@ const deleteStore = async (req, res) => {
     res.status(500).json({ success: false, message: 'Server error' });
   }
 };
+
 // Set store status to MAINTENANCE
 const setMaintenance = async (req, res) => {
   try {
@@ -176,16 +194,11 @@ const setMaintenance = async (req, res) => {
   }
 };
 
-
-
-//extra 
 // Get all stores grouped by status
 const getStoresByStatus = async (req, res) => {
   try {
-    // Fetch all stores and populate manager name
     const stores = await Store.find().populate('manager', 'name');
 
-    // Group stores by status
     const groupedStores = {
       ACTIVE: [],
       INACTIVE: [],
@@ -196,7 +209,6 @@ const getStoresByStatus = async (req, res) => {
       if (groupedStores[store.status]) {
         groupedStores[store.status].push(store);
       } else {
-        // just in case status is something unexpected
         groupedStores[store.status] = [store];
       }
     });
@@ -212,7 +224,6 @@ const getStoresByStatus = async (req, res) => {
   }
 };
 
-
 module.exports = {
   addStore,
   getLastStoreCode,
@@ -220,5 +231,6 @@ module.exports = {
   getStore,
   updateStore,
   deleteStore,
-  setMaintenance
+  setMaintenance,
+  getStoresByStatus,
 };

@@ -1,7 +1,8 @@
 <div class="container mt-5">
   <h2 class="text-center mb-4">Manage Stores</h2>
 
-  <ul class="nav nav-tabs justify-content-center store-tabs">
+  <!-- Tabs -->
+  <ul class="nav nav-tabs justify-content-center store-tabs" id="storeTabs" role="tablist">
     <li class="nav-item">
       <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#active">Active</button>
     </li>
@@ -17,117 +18,204 @@
 
     <!-- ACTIVE -->
     <div class="tab-pane fade show active" id="active">
-      <table class="table table-bordered table-hover">
-        <thead class="table-light">
-          <tr>
-            <th>Name</th>
-            <th>Code</th>
-            <th>Address</th>
-            <th>Working Hours</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let store of activeStores">
-            <td>{{ store.name }}</td>
-            <td>{{ store.storeCode }}</td>
-            <td>{{ formatAddress(store) }}</td>
-            <td>{{ getWorkingHours(store) }}</td>
-            <td>
-              <button class="btn btn-warning btn-sm me-2" (click)="openEdit(store)">Update</button>
-              <button class="btn btn-danger btn-sm me-2" (click)="deleteStore(store._id)">Delete</button>
-              <button class="btn btn-secondary btn-sm" (click)="maintenance(store._id)">Maintenance</button>
-            </td>
-          </tr>
-        </tbody>
+      <div class="table-controls d-flex justify-content-between align-items-center mb-2">
+        <mat-form-field appearance="outline" class="form-control-sm">
+          <mat-label>Rows</mat-label>
+          <mat-select [value]="pageSize" (selectionChange)="changePageSize($event.value, 'active')">
+            <mat-option *ngFor="let size of pageSizeOptions" [value]="size">{{ size }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="form-control-sm">
+          <mat-label>Search Active</mat-label>
+          <input matInput (keyup)="applyFilter($event, 'active')" placeholder="Search stores">
+        </mat-form-field>
+      </div>
+
+      <!-- Desktop Table -->
+      <table mat-table [dataSource]="activeDS" matSort class="custom-table">
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+          <td mat-cell *matCellDef="let s">{{ s.name }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="code">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Code</th>
+          <td mat-cell *matCellDef="let s">{{ s.storeCode }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="address">
+          <th mat-header-cell *matHeaderCellDef>Address</th>
+          <td mat-cell *matCellDef="let s">{{ formatAddress(s) }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="workingHours">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Hours</th>
+          <td mat-cell *matCellDef="let s">{{ getWorkingHours(s) }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Actions</th>
+          <td mat-cell *matCellDef="let s">
+            <div class="action-buttons">
+              <button class="btn btn-warning btn-sm" (click)="openEdit(s)">Update</button>
+              <button class="btn btn-danger btn-sm" (click)="deleteStore(s._id)">Delete</button>
+              <button class="btn btn-secondary btn-sm" (click)="maintenance(s._id)">Maint.</button>
+            </div>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
       </table>
+
+      <!-- Mobile Cards -->
+      <div class="mobile-cards">
+        <div class="store-card" *ngFor="let s of activeDS.filteredData">
+          <div><strong>Name:</strong> {{ s.name }}</div>
+          <div><strong>Code:</strong> {{ s.storeCode }}</div>
+          <div><strong>Address:</strong> {{ formatAddress(s) }}</div>
+          <div><strong>Hours:</strong> {{ getWorkingHours(s) }}</div>
+          <div class="action-buttons">
+            <button class="btn btn-warning btn-sm" (click)="openEdit(s)">Update</button>
+            <button class="btn btn-danger btn-sm" (click)="deleteStore(s._id)">Delete</button>
+            <button class="btn btn-secondary btn-sm" (click)="maintenance(s._id)">Maint.</button>
+          </div>
+        </div>
+      </div>
+
+      <mat-paginator #activePaginator [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions" showFirstLastButtons></mat-paginator>
     </div>
 
     <!-- INACTIVE -->
     <div class="tab-pane fade" id="inactive">
-      <table class="table table-bordered table-hover">
-        <thead class="table-light">
-          <tr>
-            <th>Name</th>
-            <th>Code</th>
-            <th>Address</th>
-            <th>Working Hours</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let store of inactiveStores">
-            <td>{{ store.name }}</td>
-            <td>{{ store.storeCode }}</td>
-            <td>{{ formatAddress(store) }}</td>
-            <td>{{ getWorkingHours(store) }}</td>
-            <td>
-              <button class="btn btn-warning btn-sm me-2" (click)="openEdit(store)">Update</button>
-              <button class="btn btn-danger btn-sm me-2" (click)="deleteStore(store._id)">Delete</button>
-              <button class="btn btn-secondary btn-sm" (click)="maintenance(store._id)">Maintenance</button>
-            </td>
-          </tr>
-        </tbody>
+      <div class="table-controls d-flex justify-content-between align-items-center mb-2">
+        <mat-form-field appearance="outline" class="form-control-sm">
+          <mat-label>Rows</mat-label>
+          <mat-select [value]="pageSize" (selectionChange)="changePageSize($event.value, 'inactive')">
+            <mat-option *ngFor="let size of pageSizeOptions" [value]="size">{{ size }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="form-control-sm">
+          <mat-label>Search Inactive</mat-label>
+          <input matInput (keyup)="applyFilter($event, 'inactive')" placeholder="Search stores">
+        </mat-form-field>
+      </div>
+
+      <table mat-table [dataSource]="inactiveDS" matSort class="custom-table">
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+          <td mat-cell *matCellDef="let s">{{ s.name }}</td>
+        </ng-container>
+        <ng-container matColumnDef="code">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Code</th>
+          <td mat-cell *matCellDef="let s">{{ s.storeCode }}</td>
+        </ng-container>
+        <ng-container matColumnDef="address">
+          <th mat-header-cell *matHeaderCellDef>Address</th>
+          <td mat-cell *matCellDef="let s">{{ formatAddress(s) }}</td>
+        </ng-container>
+        <ng-container matColumnDef="workingHours">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Hours</th>
+          <td mat-cell *matCellDef="let s">{{ getWorkingHours(s) }}</td>
+        </ng-container>
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Actions</th>
+          <td mat-cell *matCellDef="let s">
+            <div class="action-buttons">
+              <button class="btn btn-warning btn-sm" (click)="openEdit(s)">Update</button>
+              <button class="btn btn-danger btn-sm" (click)="deleteStore(s._id)">Delete</button>
+              <button class="btn btn-secondary btn-sm" (click)="maintenance(s._id)">Maint.</button>
+            </div>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
       </table>
+
+      <div class="mobile-cards">
+        <div class="store-card" *ngFor="let s of inactiveDS.filteredData">
+          <div><strong>Name:</strong> {{ s.name }}</div>
+          <div><strong>Code:</strong> {{ s.storeCode }}</div>
+          <div><strong>Address:</strong> {{ formatAddress(s) }}</div>
+          <div><strong>Hours:</strong> {{ getWorkingHours(s) }}</div>
+          <div class="action-buttons">
+            <button class="btn btn-warning btn-sm" (click)="openEdit(s)">Update</button>
+            <button class="btn btn-danger btn-sm" (click)="deleteStore(s._id)">Delete</button>
+            <button class="btn btn-secondary btn-sm" (click)="maintenance(s._id)">Maint.</button>
+          </div>
+        </div>
+      </div>
+
+      <mat-paginator #inactivePaginator [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions" showFirstLastButtons></mat-paginator>
     </div>
 
     <!-- MAINTENANCE -->
     <div class="tab-pane fade" id="maintenance">
-      <table class="table table-bordered table-hover">
-        <thead class="table-light">
-          <tr>
-            <th>Name</th>
-            <th>Code</th>
-            <th>Address</th>
-            <th>Working Hours</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let store of maintenanceStores">
-            <td>{{ store.name }}</td>
-            <td>{{ store.storeCode }}</td>
-            <td>{{ formatAddress(store) }}</td>
-            <td>{{ getWorkingHours(store) }}</td>
-            <td>
-              <button class="btn btn-warning btn-sm me-2" (click)="openEdit(store)">Update</button>
-              <button class="btn btn-danger btn-sm me-2" (click)="deleteStore(store._id)">Delete</button>
-              <button class="btn btn-secondary btn-sm" (click)="maintenance(store._id)">Maintenance</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-</div>
+      <div class="table-controls d-flex justify-content-between align-items-center mb-2">
+        <mat-form-field appearance="outline" class="form-control-sm">
+          <mat-label>Rows</mat-label>
+          <mat-select [value]="pageSize" (selectionChange)="changePageSize($event.value, 'maintenance')">
+            <mat-option *ngFor="let size of pageSizeOptions" [value]="size">{{ size }}</mat-option>
+          </mat-select>
+        </mat-form-field>
 
-<!-- EDIT MODAL -->
-<div #editModal class="modal fade">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5>Update Store</h5>
-        <button class="btn-close" data-bs-dismiss="modal"></button>
+        <mat-form-field appearance="outline" class="form-control-sm">
+          <mat-label>Search Maintenance</mat-label>
+          <input matInput (keyup)="applyFilter($event, 'maintenance')" placeholder="Search stores">
+        </mat-form-field>
       </div>
-      <div class="modal-body">
-        <form [formGroup]="editForm">
-          <input class="form-control mb-2" placeholder="Name" formControlName="name">
-          <input class="form-control mb-2" placeholder="Store Code" formControlName="storeCode">
-          <input class="form-control mb-2" placeholder="Line 1" formControlName="line1">
-          <input class="form-control mb-2" placeholder="Area" formControlName="area">
-          <input class="form-control mb-2" placeholder="City" formControlName="city">
-          <input class="form-control mb-2" placeholder="Pincode" formControlName="pincode">
-          <input class="form-control mb-2" placeholder="State" formControlName="state">
-          <select class="form-select mb-2" formControlName="status">
-            <option value="ACTIVE">ACTIVE</option>
-            <option value="INACTIVE">INACTIVE</option>
-            <option value="MAINTENANCE">MAINTENANCE</option>
-          </select>
-        </form>
+
+      <table mat-table [dataSource]="maintenanceDS" matSort class="custom-table">
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+          <td mat-cell *matCellDef="let s">{{ s.name }}</td>
+        </ng-container>
+        <ng-container matColumnDef="code">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Code</th>
+          <td mat-cell *matCellDef="let s">{{ s.storeCode }}</td>
+        </ng-container>
+        <ng-container matColumnDef="address">
+          <th mat-header-cell *matHeaderCellDef>Address</th>
+          <td mat-cell *matCellDef="let s">{{ formatAddress(s) }}</td>
+        </ng-container>
+        <ng-container matColumnDef="workingHours">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Hours</th>
+          <td mat-cell *matCellDef="let s">{{ getWorkingHours(s) }}</td>
+        </ng-container>
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Actions</th>
+          <td mat-cell *matCellDef="let s">
+            <div class="action-buttons">
+              <button class="btn btn-warning btn-sm" (click)="openEdit(s)">Update</button>
+              <button class="btn btn-danger btn-sm" (click)="deleteStore(s._id)">Delete</button>
+              <button class="btn btn-secondary btn-sm" (click)="maintenance(s._id)">Maint.</button>
+            </div>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+
+      <div class="mobile-cards">
+        <div class="store-card" *ngFor="let s of maintenanceDS.filteredData">
+          <div><strong>Name:</strong> {{ s.name }}</div>
+          <div><strong>Code:</strong> {{ s.storeCode }}</div>
+          <div><strong>Address:</strong> {{ formatAddress(s) }}</div>
+          <div><strong>Hours:</strong> {{ getWorkingHours(s) }}</div>
+          <div class="action-buttons">
+            <button class="btn btn-warning btn-sm" (click)="openEdit(s)">Update</button>
+            <button class="btn btn-danger btn-sm" (click)="deleteStore(s._id)">Delete</button>
+            <button class="btn btn-secondary btn-sm" (click)="maintenance(s._id)">Maint.</button>
+          </div>
+        </div>
       </div>
-      <div class="modal-footer">
-        <button class="btn btn-primary" (click)="updateStore()">Update</button>
-      </div>
+
+      <mat-paginator #maintenancePaginator [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions" showFirstLastButtons></mat-paginator>
     </div>
+
   </div>
 </div>

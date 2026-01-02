@@ -3,9 +3,11 @@ const express = require('express');
 const mongoose = require('mongoose');
 const passport = require('passport');
 const cors=require('cors');
+
 require('./utils/Passport'); 
 
 const authRoutes = require('./routes/authRoutes'); 
+const storeRoutes = require('./routes/storeRoutes');
 
 const app = express();
 // Middleware
@@ -28,6 +30,7 @@ app.use(cors({
 
 // Routes
 app.use('/auth', authRoutes);
+app.use('/store',storeRoutes);
 
 // Default route
 app.get('/', (req, res) => {

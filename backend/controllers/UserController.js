@@ -28,8 +28,7 @@ const registerManual = async (req, res) => {
 
     const EmailExists = await User.findOne({ email });
     const PhoneExists = await User.findOne({ phone });
-
-    // ✅ NEW LOGIC (ONLY ADDITION)
+    
     if (EmailExists) {
       if (EmailExists.status === 'PENDING') {
         // update OTP & resend
@@ -229,9 +228,9 @@ const getAvailableManagers = async (req, res) => {
   try {
     const managers = await User.find({
       role: 'STORE_MANAGER',
+      status: 'ACTIVE',
       isAssignedToStore: false,
-      status: 'ACTIVE', // optional
-    }).select('name'); // only _id and name will be returned
+    }).select('_id name');
 
     res.status(200).json({
       success: true,
@@ -239,13 +238,14 @@ const getAvailableManagers = async (req, res) => {
       data: managers,
     });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     res.status(500).json({
       success: false,
       message: 'Server error while fetching available managers',
     });
   }
 };
+
 /* ======================
    Export all functions
 ====================== */
