@@ -1,0 +1,63 @@
+<!-- Toast -->
+<div *ngIf="toastMessage" class="modern-toast-wrapper">
+  <div class="modern-toast-card" [ngClass]="toastType">
+    <div class="toast-accent"></div>
+    <div class="toast-content">
+      <div class="toast-icon">
+        <i *ngIf="toastType === 'success'" class="fas fa-check-circle"></i>
+        <i *ngIf="toastType === 'danger'" class="fas fa-exclamation-circle"></i>
+      </div>
+      <div class="toast-body-text">
+        <strong class="toast-status">
+          {{ toastType === 'success' ? 'Success' : 'Error' }}
+        </strong>
+        <p class="toast-msg-content">{{ toastMessage }}</p>
+      </div>
+      <button class="btn-toast-close" (click)="toastMessage=null">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Centered Form -->
+<div class="page-wrapper">
+  <div class="form-card">
+
+    <h2 class="fw-bold mb-2">Add Manager</h2>
+    <p class="text-muted mb-4">Fill in the manager details below</p>
+
+    <form [formGroup]="managerForm" (ngSubmit)="onSubmit()">
+
+      <!-- Name -->
+      <div class="form-floating mb-3">
+        <input type="text" class="form-control" placeholder="Name" formControlName="name">
+        <label>Name</label>
+      </div>
+
+      <!-- Email -->
+      <div class="form-floating mb-3">
+        <input type="email" class="form-control" placeholder="Email" formControlName="email">
+        <label>Email</label>
+      </div>
+
+      <!-- Phone -->
+      <div class="form-floating mb-3">
+        <input type="text" class="form-control" placeholder="Phone" formControlName="phone">
+        <label>Phone</label>
+      </div>
+
+      <!-- Password -->
+      <div class="form-floating mb-4">
+        <input type="password" class="form-control" placeholder="Password" formControlName="password">
+        <label>Password</label>
+      </div>
+
+      <!-- Submit -->
+      <button class="btn btn-primary w-100 btn-lg" [disabled]="managerForm.invalid || isSubmitting">
+        {{ isSubmitting ? 'Adding Manager...' : 'Add Manager' }}
+      </button>
+
+    </form>
+  </div>
+</div>

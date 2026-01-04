@@ -1,16 +1,16 @@
 <app-header></app-header>
+
 <!-- Toast Message -->
 <div *ngIf="toastMessage" class="modern-toast-wrapper">
   <div class="modern-toast-card shadow-lg" [ngClass]="toastType">
-    
     <div class="toast-accent"></div>
-    
+
     <div class="toast-content">
       <div class="toast-icon">
         <i *ngIf="toastType === 'success'" class="fas fa-check-circle"></i>
         <i *ngIf="toastType === 'danger'" class="fas fa-exclamation-circle"></i>
       </div>
-      
+
       <div class="toast-body-text">
         <strong class="toast-status text-uppercase">
           {{ toastType === 'success' ? 'Success' : 'Attention' }}
@@ -26,18 +26,18 @@
 </div>
 
 <div class="register-container container-fluid p-0">
-  <div class="row g-0 align-items-stretch">
+  <div class="row g-0 min-vh-100">
 
-    <!-- Left Image -->
-    <div class="col-md-6 d-none d-md-block position-relative">
+    <!-- LEFT IMAGE -->
+    <div class="col-md-6 d-none d-md-flex image-col p-0">
       <div class="image-wrapper">
-        <img src="/assets/images/login.png" alt="Login Background">
+        <img src="/assets/images/login.png" alt="Login Image">
       </div>
     </div>
 
-    <!-- Form Side -->
-    <div class="col-12 col-md-6">
-      <div class="register-form-wrapper d-flex justify-content-center align-items-center h-100">
+    <!-- FORM -->
+    <div class="col-12 col-md-6 form-col p-0">
+      <div class="register-form-wrapper">
 
         <div class="form-card p-4 p-lg-5">
           <h2 class="fw-bold mb-2 text-dark">Welcome Back</h2>
@@ -47,7 +47,12 @@
 
             <!-- Email -->
             <div class="form-floating mb-3">
-              <input type="email" class="form-control" id="email" placeholder="Email" formControlName="email">
+              <input
+                type="email"
+                class="form-control"
+                id="email"
+                placeholder="Email"
+                formControlName="email">
               <label for="email">Email Address</label>
               <div *ngIf="isInvalid('email')" class="text-danger small mt-1">
                 Please enter a valid email.
@@ -56,7 +61,12 @@
 
             <!-- Password -->
             <div class="form-floating mb-4">
-              <input type="password" class="form-control" id="pass" placeholder="Password" formControlName="password">
+              <input
+                type="password"
+                class="form-control"
+                id="pass"
+                placeholder="Password"
+                formControlName="password">
               <label for="pass">Password</label>
               <div *ngIf="isInvalid('password')" class="text-danger small mt-1">
                 Password must be at least 6 characters.
@@ -64,7 +74,9 @@
             </div>
 
             <!-- Login Button -->
-            <button class="btn btn-primary w-100 btn-lg mb-3" [disabled]="loginForm.invalid">
+            <button
+              class="btn btn-primary w-100 btn-lg mb-3"
+              [disabled]="loginForm.invalid">
               Login
             </button>
 
@@ -81,8 +93,10 @@
           </button>
 
           <p class="text-center mt-2">
-            Don't have an account? 
-            <a routerLink="/register" class="text-decoration-none fw-bold text-primary">Register</a>
+            Don't have an account?
+            <a routerLink="/register" class="fw-bold text-primary text-decoration-none">
+              Register
+            </a>
           </p>
         </div>
 

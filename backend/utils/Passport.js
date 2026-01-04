@@ -3,7 +3,6 @@ const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const User = require('../models/User');
 require('dotenv').config();
 
-
 passport.use(
   new GoogleStrategy(
     {
@@ -13,22 +12,41 @@ passport.use(
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
-        let user = await User.findOne({ googleId: profile.id });
+        const email = profile.emails[0].value;
 
-        if (user) return done(null, user);
+        // 🔍 Check by email FIRST
+        let user = await User.findOne({ email });
 
+        // ❌ Manual account exists → block Google login
+        if (user && user.provider === 'manual') {
+          return done(null, false, {
+            message:
+              'This email is registered manually. Please login using email and password.',
+          });
+        }
+
+        // ✅ Google user exists → login
+        if (user) {
+          return done(null, user);
+        }
+
+        // ✅ New Google user → create
         user = await User.create({
           name: profile.displayName,
-          email: profile.emails[0].value,
+          email,
           googleId: profile.id,
           provider: 'google',
           status: 'ACTIVE',
           isEmailVerified: true,
+          role: 'CUSTOMER',
         });
 
-        done(null, user);
+        return done(null, user);
       } catch (err) {
-        done(err, null);
+        return done(null, false, {
+          message: 'This email is registered manually. Please login using email and password.'
+        });
+
       }
     }
   )

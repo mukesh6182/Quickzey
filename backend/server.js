@@ -5,7 +5,7 @@ const passport = require('passport');
 const cors=require('cors');
 
 require('./utils/Passport'); 
-
+const adminRoutes = require('./routes/adminRoutes');
 const authRoutes = require('./routes/authRoutes'); 
 const storeRoutes = require('./routes/storeRoutes');
 
@@ -31,6 +31,7 @@ app.use(cors({
 // Routes
 app.use('/auth', authRoutes);
 app.use('/store',storeRoutes);
+app.use('/admin',adminRoutes);
 
 // Default route
 app.get('/', (req, res) => {

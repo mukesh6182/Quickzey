@@ -1,0 +1,101 @@
+/* Page Wrapper */
+.page-wrapper {
+  min-height: calc(100vh - 70px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f8f9fa;
+  padding: 20px;
+}
+
+/* Form Card */
+.form-card {
+  width: 100%;
+  max-width: 520px;
+  background: #fff;
+  padding: 35px;
+  border-radius: 14px;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.08);
+}
+
+/* Inputs */
+.form-floating > .form-control,
+.form-floating > textarea,
+.form-floating > .form-select {
+  border-radius: 10px;
+  border: 1px solid #e0e0e0;
+}
+
+.form-floating > .form-control:focus,
+.form-floating > textarea:focus,
+.form-floating > .form-select:focus {
+  border-color: #20c997;
+  box-shadow: 0 0 0 4px rgba(32,201,151,0.15);
+}
+
+/* Button */
+.btn-primary {
+  background-color: #20c997;
+  border: none;
+  border-radius: 10px;
+  padding: 12px;
+  font-weight: 600;
+}
+
+.btn-primary:hover {
+  background-color: #17a589;
+}
+
+/* Toast */
+.modern-toast-wrapper {
+  position: fixed;
+  top: 25px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+}
+
+.modern-toast-card {
+  background: #fff;
+  border-radius: 12px;
+  display: flex;
+  overflow: hidden;
+  min-width: 340px;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+}
+
+.toast-accent {
+  width: 6px;
+}
+
+.success .toast-accent { background: #20c997; }
+.danger .toast-accent { background: #ff7675; }
+
+.toast-content {
+  padding: 14px 18px;
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.toast-icon {
+  font-size: 22px;
+}
+
+.toast-status {
+  font-size: 11px;
+  font-weight: 800;
+  color: #aaa;
+}
+
+.toast-msg-content {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.btn-toast-close {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}

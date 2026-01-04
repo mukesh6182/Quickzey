@@ -1,0 +1,234 @@
+<div class="container mt-5">
+  <h2 class="text-center mb-4">Manage Users</h2>
+
+  <!-- Tabs -->
+  <ul class="nav nav-tabs justify-content-center store-tabs" role="tablist">
+    <li class="nav-item">
+      <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#admins">Admins</button>
+    </li>
+    <li class="nav-item">
+      <button class="nav-link" data-bs-toggle="tab" data-bs-target="#managers">Managers</button>
+    </li>
+    <li class="nav-item">
+      <button class="nav-link" data-bs-toggle="tab" data-bs-target="#customers">Customers</button>
+    </li>
+    <li class="nav-item">
+      <button class="nav-link" data-bs-toggle="tab" data-bs-target="#delivery">Delivery</button>
+    </li>
+  </ul>
+
+  <div class="tab-content mt-4">
+
+    <!-- ================= TAB: Admins ================= -->
+    <div class="tab-pane fade show active" id="admins">
+      <div class="table-controls d-flex justify-content-between align-items-center mb-2">
+        <mat-form-field appearance="outline" class="form-control-sm">
+          <mat-label>Rows</mat-label>
+          <mat-select [value]="pageSize" (selectionChange)="changePageSize($event.value, 'admins')">
+            <mat-option *ngFor="let size of pageSizeOptions" [value]="size">{{ size }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="form-control-sm">
+          <mat-label>Search</mat-label>
+          <input matInput (keyup)="applyFilter($event, 'admins')" placeholder="Search users">
+        </mat-form-field>
+      </div>
+
+      <!-- Table Desktop -->
+      <table mat-table [dataSource]="adminsDS" matSort class="custom-table d-none d-md-table">
+        <ng-container matColumnDef="name"><th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th><td mat-cell *matCellDef="let u">{{ u.name }}</td></ng-container>
+        <ng-container matColumnDef="email"><th mat-header-cell *matHeaderCellDef mat-sort-header>Email</th><td mat-cell *matCellDef="let u">{{ u.email }}</td></ng-container>
+        <ng-container matColumnDef="phone"><th mat-header-cell *matHeaderCellDef>Phone</th><td mat-cell *matCellDef="let u">{{ u.phone }}</td></ng-container>
+        <ng-container matColumnDef="role"><th mat-header-cell *matHeaderCellDef>Role</th><td mat-cell *matCellDef="let u">{{ u.role }}</td></ng-container>
+        <ng-container matColumnDef="actions"><th mat-header-cell *matHeaderCellDef>Actions</th><td mat-cell *matCellDef="let u">
+          <button class="btn btn-warning btn-sm" (click)="openEdit(u)">Update</button>
+          <button class="btn btn-danger btn-sm" (click)="deleteUser(u._id)">Delete</button>
+        </td></ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+
+      <!-- Mobile Cards -->
+      <div class="mobile-cards d-md-none">
+        <div class="store-card" *ngFor="let u of adminsDS.filteredData">
+          <div><strong>Name:</strong> {{ u.name }}</div>
+          <div><strong>Email:</strong> {{ u.email }}</div>
+          <div><strong>Phone:</strong> {{ u.phone }}</div>
+          <div><strong>Role:</strong> {{ u.role }}</div>
+          <div class="action-buttons">
+            <button class="btn btn-warning btn-sm" (click)="openEdit(u)">Update</button>
+            <button class="btn btn-danger btn-sm" (click)="deleteUser(u._id)">Delete</button>
+          </div>
+        </div>
+      </div>
+
+      <mat-paginator #adminsPaginator [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions" showFirstLastButtons></mat-paginator>
+    </div>
+
+    <!-- ================= TAB: Managers ================= -->
+    <div class="tab-pane fade" id="managers">
+      <div class="table-controls d-flex justify-content-between align-items-center mb-2">
+        <mat-form-field appearance="outline" class="form-control-sm">
+          <mat-label>Rows</mat-label>
+          <mat-select [value]="pageSize" (selectionChange)="changePageSize($event.value, 'managers')">
+            <mat-option *ngFor="let size of pageSizeOptions" [value]="size">{{ size }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="form-control-sm">
+          <mat-label>Search</mat-label>
+          <input matInput (keyup)="applyFilter($event, 'managers')" placeholder="Search users">
+        </mat-form-field>
+      </div>
+
+      <!-- Table Desktop -->
+      <table mat-table [dataSource]="managersDS" matSort class="custom-table d-none d-md-table">
+        <ng-container matColumnDef="name"><th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th><td mat-cell *matCellDef="let u">{{ u.name }}</td></ng-container>
+        <ng-container matColumnDef="email"><th mat-header-cell *matHeaderCellDef mat-sort-header>Email</th><td mat-cell *matCellDef="let u">{{ u.email }}</td></ng-container>
+        <ng-container matColumnDef="phone"><th mat-header-cell *matHeaderCellDef>Phone</th><td mat-cell *matCellDef="let u">{{ u.phone }}</td></ng-container>
+        <ng-container matColumnDef="role"><th mat-header-cell *matHeaderCellDef>Role</th><td mat-cell *matCellDef="let u">{{ u.role }}</td></ng-container>
+        <ng-container matColumnDef="actions"><th mat-header-cell *matHeaderCellDef>Actions</th><td mat-cell *matCellDef="let u">
+          <button class="btn btn-warning btn-sm" (click)="openEdit(u)">Update</button>
+          <button class="btn btn-danger btn-sm" (click)="deleteUser(u._id)">Delete</button>
+        </td></ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+
+      <!-- Mobile Cards -->
+      <div class="mobile-cards d-md-none">
+        <div class="store-card" *ngFor="let u of managersDS.filteredData">
+          <div><strong>Name:</strong> {{ u.name }}</div>
+          <div><strong>Email:</strong> {{ u.email }}</div>
+          <div><strong>Phone:</strong> {{ u.phone }}</div>
+          <div><strong>Role:</strong> {{ u.role }}</div>
+          <div class="action-buttons">
+            <button class="btn btn-warning btn-sm" (click)="openEdit(u)">Update</button>
+            <button class="btn btn-danger btn-sm" (click)="deleteUser(u._id)">Delete</button>
+          </div>
+        </div>
+      </div>
+
+      <mat-paginator #managersPaginator [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions" showFirstLastButtons></mat-paginator>
+    </div>
+
+    <!-- ================= TAB: Customers ================= -->
+    <div class="tab-pane fade" id="customers">
+      <div class="table-controls d-flex justify-content-between align-items-center mb-2">
+        <mat-form-field appearance="outline" class="form-control-sm">
+          <mat-label>Rows</mat-label>
+          <mat-select [value]="pageSize" (selectionChange)="changePageSize($event.value, 'customers')">
+            <mat-option *ngFor="let size of pageSizeOptions" [value]="size">{{ size }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="form-control-sm">
+          <mat-label>Search</mat-label>
+          <input matInput (keyup)="applyFilter($event, 'customers')" placeholder="Search users">
+        </mat-form-field>
+      </div>
+
+      <table mat-table [dataSource]="customersDS" matSort class="custom-table d-none d-md-table">
+        <ng-container matColumnDef="name"><th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th><td mat-cell *matCellDef="let u">{{ u.name }}</td></ng-container>
+        <ng-container matColumnDef="email"><th mat-header-cell *matHeaderCellDef mat-sort-header>Email</th><td mat-cell *matCellDef="let u">{{ u.email }}</td></ng-container>
+        <ng-container matColumnDef="phone"><th mat-header-cell *matHeaderCellDef>Phone</th><td mat-cell *matCellDef="let u">{{ u.phone }}</td></ng-container>
+        <ng-container matColumnDef="role"><th mat-header-cell *matHeaderCellDef>Role</th><td mat-cell *matCellDef="let u">{{ u.role }}</td></ng-container>
+        <ng-container matColumnDef="actions"><th mat-header-cell *matHeaderCellDef>Actions</th><td mat-cell *matCellDef="let u">
+          <button class="btn btn-warning btn-sm" (click)="openEdit(u)">Update</button>
+          <button class="btn btn-danger btn-sm" (click)="deleteUser(u._id)">Delete</button>
+        </td></ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+
+      <div class="mobile-cards d-md-none">
+        <div class="store-card" *ngFor="let u of customersDS.filteredData">
+          <div><strong>Name:</strong> {{ u.name }}</div>
+          <div><strong>Email:</strong> {{ u.email }}</div>
+          <div><strong>Phone:</strong> {{ u.phone }}</div>
+          <div><strong>Role:</strong> {{ u.role }}</div>
+          <div class="action-buttons">
+            <button class="btn btn-warning btn-sm" (click)="openEdit(u)">Update</button>
+            <button class="btn btn-danger btn-sm" (click)="deleteUser(u._id)">Delete</button>
+          </div>
+        </div>
+      </div>
+
+      <mat-paginator #customersPaginator [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions" showFirstLastButtons></mat-paginator>
+    </div>
+
+    <!-- ================= TAB: Delivery ================= -->
+    <div class="tab-pane fade" id="delivery">
+      <div class="table-controls d-flex justify-content-between align-items-center mb-2">
+        <mat-form-field appearance="outline" class="form-control-sm">
+          <mat-label>Rows</mat-label>
+          <mat-select [value]="pageSize" (selectionChange)="changePageSize($event.value, 'delivery')">
+            <mat-option *ngFor="let size of pageSizeOptions" [value]="size">{{ size }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="form-control-sm">
+          <mat-label>Search</mat-label>
+          <input matInput (keyup)="applyFilter($event, 'delivery')" placeholder="Search users">
+        </mat-form-field>
+      </div>
+
+      <table mat-table [dataSource]="deliveryDS" matSort class="custom-table d-none d-md-table">
+        <ng-container matColumnDef="name"><th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th><td mat-cell *matCellDef="let u">{{ u.name }}</td></ng-container>
+        <ng-container matColumnDef="email"><th mat-header-cell *matHeaderCellDef mat-sort-header>Email</th><td mat-cell *matCellDef="let u">{{ u.email }}</td></ng-container>
+        <ng-container matColumnDef="phone"><th mat-header-cell *matHeaderCellDef>Phone</th><td mat-cell *matCellDef="let u">{{ u.phone }}</td></ng-container>
+        <ng-container matColumnDef="role"><th mat-header-cell *matHeaderCellDef>Role</th><td mat-cell *matCellDef="let u">{{ u.role }}</td></ng-container>
+        <ng-container matColumnDef="actions"><th mat-header-cell *matHeaderCellDef>Actions</th><td mat-cell *matCellDef="let u">
+          <button class="btn btn-warning btn-sm" (click)="openEdit(u)">Update</button>
+          <button class="btn btn-danger btn-sm" (click)="deleteUser(u._id)">Delete</button>
+        </td></ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+
+      <div class="mobile-cards d-md-none">
+        <div class="store-card" *ngFor="let u of deliveryDS.filteredData">
+          <div><strong>Name:</strong> {{ u.name }}</div>
+          <div><strong>Email:</strong> {{ u.email }}</div>
+          <div><strong>Phone:</strong> {{ u.phone }}</div>
+          <div><strong>Role:</strong> {{ u.role }}</div>
+          <div class="action-buttons">
+            <button class="btn btn-warning btn-sm" (click)="openEdit(u)">Update</button>
+            <button class="btn btn-danger btn-sm" (click)="deleteUser(u._id)">Delete</button>
+          </div>
+        </div>
+      </div>
+
+      <mat-paginator #deliveryPaginator [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions" showFirstLastButtons></mat-paginator>
+    </div>
+
+  </div>
+
+  <!-- Edit Modal -->
+  <div #editModal class="modal fade" tabindex="-1">
+    <div class="modal-dialog">
+      <form [formGroup]="editForm" (ngSubmit)="updateUser()" class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Edit User</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <mat-form-field appearance="outline" class="w-100 mb-2">
+            <mat-label>Name</mat-label>
+            <input matInput formControlName="name">
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="w-100 mb-2">
+            <mat-label>Email</mat-label>
+            <input matInput formControlName="email">
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="w-100 mb-2">
+            <mat-label>Phone</mat-label>
+            <input matInput formControlName="phone">
+          </mat-form-field>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-success" [disabled]="editForm.invalid">Update</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

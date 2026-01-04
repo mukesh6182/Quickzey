@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
+import { Router, RouterModule, ActivatedRoute } from '@angular/router';
 import { HeaderComponent } from '../../customer/header/header.component';
 import { AuthService } from '../../../services/auth.service';
 
@@ -17,7 +17,8 @@ import { AuthService } from '../../../services/auth.service';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
+
   loginForm!: FormGroup;
   isSubmitting = false;
 
@@ -28,11 +29,34 @@ export class LoginComponent {
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
+    });
+  }
+
+  // ✅ HANDLE GOOGLE LOGIN ERRORS HERE
+  ngOnInit(): void {
+    this.route.queryParams.subscribe(params => {
+      const error = params['error'];
+
+      if (error === 'manual_account') {
+        this.toastMessage =
+          'This email is registered manually. Please login using email and password.';
+        this.toastType = 'danger';
+
+        // Auto dismiss toast
+        setTimeout(() => this.toastMessage = null, 5000);
+
+        // Optional: clean URL
+        this.router.navigate([], {
+          queryParams: {},
+          replaceUrl: true
+        });
+      }
     });
   }
 
@@ -47,19 +71,16 @@ export class LoginComponent {
         next: (res) => {
           this.authService.saveAuthData(res);
 
-          // Show success toast
           this.toastMessage = `Welcome back, ${res.name}!`;
           this.toastType = 'success';
-          setTimeout(() => this.toastMessage = null, 3000); // auto dismiss
+          setTimeout(() => this.toastMessage = null, 3000);
 
-          // Redirect based on role after short delay
           setTimeout(() => {
             const role = res.role?.toUpperCase();
-            switch(role) {
+            switch (role) {
               case 'ADMIN': this.router.navigate(['/admin']); break;
               case 'STORE_MANAGER': this.router.navigate(['/manager/dashboard']); break;
               case 'DELIVERY': this.router.navigate(['/delivery/dashboard']); break;
-              case 'CUSTOMER':
               default: this.router.navigate(['/']); break;
             }
           }, 3000);
@@ -69,7 +90,7 @@ export class LoginComponent {
         error: (err) => {
           this.toastMessage = err.error?.message || 'Login failed.';
           this.toastType = 'danger';
-          setTimeout(() => this.toastMessage = null, 5000); // auto dismiss
+          setTimeout(() => this.toastMessage = null, 5000);
           this.isSubmitting = false;
         }
       });
@@ -84,4 +105,3 @@ export class LoginComponent {
     return !!(control && control.invalid && (control.dirty || control.touched));
   }
 }
-

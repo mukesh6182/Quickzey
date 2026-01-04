@@ -1,17 +1,24 @@
-/* 1. Main Container Setup */
+/* =====================
+   GLOBAL LAYOUT
+===================== */
+
 .register-container {
-  min-height: 100vh; /* Takes at least full screen */
   background: #fff;
-  overflow-x: hidden;
+  min-height: 100vh;
 }
 
-/* 2. The Image Wrapper Logic */
+.image-col,
+.form-col {
+  min-height: 100vh;
+}
+
+/* =====================
+   LEFT IMAGE
+===================== */
+
 .image-wrapper {
-  position: absolute;
-  top: 0;
-  left: 0;
   width: 100%;
-  height: 100%;
+  height: 100vh;
 }
 
 .image-wrapper img {
@@ -21,10 +28,16 @@
   object-position: center;
 }
 
-/* 3. Form Side Styling */
+/* =====================
+   FORM SECTION
+===================== */
+
 .register-form-wrapper {
-  background-color: #fff;
-  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #fff;
 }
 
 .form-card {
@@ -32,7 +45,10 @@
   max-width: 500px;
 }
 
-/* 4. Stylish Inputs (Floating Labels) */
+/* =====================
+   INPUTS
+===================== */
+
 .form-floating > .form-control {
   border: 1px solid #e0e0e0;
   background-color: #fcfcfc;
@@ -49,14 +65,17 @@
   color: #999;
 }
 
-/* 5. Buttons */
+/* =====================
+   BUTTONS
+===================== */
+
 .btn-primary {
   background-color: #20c997;
   border: none;
   border-radius: 10px;
   padding: 12px;
   font-weight: 600;
-  transition: all 0.3s;
+  transition: all 0.3s ease;
 }
 
 .btn-primary:hover {
@@ -72,7 +91,7 @@
   padding: 10px;
   color: #555;
   font-weight: 500;
-  transition: 0.3s;
+  transition: all 0.3s;
 }
 
 .btn-google:hover {
@@ -80,16 +99,23 @@
   border-color: #ccc;
 }
 
-/* Divider Line */
+/* =====================
+   DIVIDER
+===================== */
+
 .divider {
   border-bottom: 1px solid #eee;
   line-height: 0.1em;
-  margin: 20px 0;
 }
+
 .divider span {
-  background:#fff; 
-  padding:0 10px; 
+  background: #fff;
+  padding: 0 10px;
 }
+
+/* =====================
+   TOAST
+===================== */
 
 .modern-toast-wrapper {
   position: fixed;
@@ -101,54 +127,48 @@
 }
 
 .modern-toast-card {
-  background: #ffffff;
+  background: #fff;
   border-radius: 12px;
   display: flex;
   overflow: hidden;
   border: 1px solid rgba(0,0,0,0.08);
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1) !important;
-  animation: toastPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.2) forwards;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+  animation: toastPop 0.4s ease forwards;
 }
 
 .toast-accent {
   width: 6px;
-  flex-shrink: 0;
 }
 
-/* State Colors */
-.modern-toast-card.success .toast-accent { background-color: #00b894; }
-.modern-toast-card.success .toast-icon { color: #00b894; }
-
-.modern-toast-card.danger .toast-accent { background-color: #ff7675; }
-.modern-toast-card.danger .toast-icon { color: #ff7675; }
+.modern-toast-card.success .toast-accent { background: #00b894; }
+.modern-toast-card.danger .toast-accent { background: #ff7675; }
 
 .toast-content {
   padding: 14px 18px;
   display: flex;
   align-items: center;
   gap: 15px;
-  width: 100%;
 }
 
-.toast-icon { font-size: 22px; }
+.toast-icon {
+  font-size: 22px;
+}
 
-.toast-body-text { flex-grow: 1; }
+.toast-body-text {
+  flex-grow: 1;
+}
 
 .toast-status {
-  display: block;
   font-size: 10px;
   font-weight: 800;
   letter-spacing: 1.2px;
   color: #b2bec3;
-  margin-bottom: 2px;
 }
 
 .toast-msg-content {
-  margin: 0;
   font-size: 14px;
   color: #2d3436;
   font-weight: 500;
-  line-height: 1.3;
 }
 
 .btn-toast-close {
@@ -156,13 +176,23 @@
   border: none;
   color: #dfe6e9;
   cursor: pointer;
-  padding: 5px;
-  transition: color 0.2s;
 }
 
-.btn-toast-close:hover { color: #636e72; }
+.btn-toast-close:hover {
+  color: #636e72;
+}
 
 @keyframes toastPop {
-  0% { opacity: 0; transform: translateY(-30px); }
-  100% { opacity: 1; transform: translateY(0); }
+  from { opacity: 0; transform: translateY(-30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* =====================
+   MOBILE FIX
+===================== */
+
+@media (max-width: 767px) {
+  .register-form-wrapper {
+    padding: 20px;
+  }
 }

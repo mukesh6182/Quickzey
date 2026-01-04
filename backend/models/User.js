@@ -83,7 +83,15 @@ const userSchema = new mongoose.Schema(
         return this.role === 'STORE_MANAGER';
       },
     },
+    loginAttempts: {
+      type: Number,
+      default: 0
+    },
 
+    lockUntil: {
+      type: Date,
+      default: null
+    },
   },
   { timestamps: true }
 );

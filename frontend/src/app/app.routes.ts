@@ -11,6 +11,8 @@ import { Component } from '@angular/core';
 import { AdminDashboardComponent } from './components/admin/admin-dashboard/admin-dashboard.component';
 import { AddStoreComponent } from './components/admin/add-store/add-store.component';
 import { ManageStoreComponent } from './components/admin/manage-store/manage-store.component';
+import { AddManagerComponent } from './components/admin/add-manager/add-manager.component';
+import { ManageUsersComponent } from './components/admin/manage-users/manage-users.component';
 
 export const routes: Routes = [
 
@@ -32,7 +34,9 @@ export const routes: Routes = [
     children:[ 
       { path: '',component :AdminDashboardComponent },
       { path: 'add-store' ,component:AddStoreComponent },
-      { path: 'manage-store', component:ManageStoreComponent }
+      { path: 'manage-store', component:ManageStoreComponent },
+      { path: 'add-manager', component: AddManagerComponent },
+      { path: 'manage-users', component: ManageUsersComponent },
     ]
   },
 
