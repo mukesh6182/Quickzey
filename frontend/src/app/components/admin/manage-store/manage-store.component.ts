@@ -60,7 +60,7 @@ export class ManageStoreComponent implements OnInit, AfterViewInit {
   constructor(private storeService: StoreService, private fb: FormBuilder) {
     this.editForm = this.fb.group({
       name: ['', Validators.required],
-      storeCode: ['', Validators.required],
+      storeCode: [{ value: '', disabled: true }],
       line1: ['', Validators.required],
       area: ['', Validators.required],
       city: ['', Validators.required],

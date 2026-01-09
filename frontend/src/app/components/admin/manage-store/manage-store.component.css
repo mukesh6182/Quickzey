@@ -90,6 +90,22 @@
   justify-content: flex-start;
   margin-top: 10px;
 }
+/* Teal theme */
+.teal-bg {
+  background-color: #16a085;
+}
+
+.teal-btn {
+  background-color: #16a085;
+  color: #fff;
+  border: none;
+}
+
+.teal-btn:hover {
+  background-color: #138d75;
+  color: #fff;
+}
+
 
 /* ---------- Responsive Design ---------- */
 @media (max-width: 768px) {
