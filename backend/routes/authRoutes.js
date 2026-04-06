@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const passport = require('passport');
-const { registerManual, loginManual, registerGoogle, verifyEmailOtp, addManager } = require('../controllers/UserController');
+const { registerManual, loginManual, registerGoogle, verifyEmailOtp, addManager,changePassword, forgotPassword, verifyForgotPasswordOtp,resetPassword } = require('../controllers/UserController');
 const generateToken = require('../utils/generateToken');
 const authMiddleware = require('../utils/authMiddleware');
 const authorizeRole = require('../utils/authorizeRole');
@@ -10,6 +10,14 @@ const authorizeRole = require('../utils/authorizeRole');
 router.post('/register', registerManual);
 router.post('/register/verify-otp', verifyEmailOtp);
 router.post('/login', loginManual);
+router.post('/forgot-password', forgotPassword);
+
+router.post('/verify', verifyForgotPasswordOtp);
+
+router.post('/reset-password', resetPassword);
+
+router.post('/change-password',authMiddleware,changePassword);
+
 
 router.post('/add-manager',authMiddleware,authorizeRole('ADMIN'),addManager);
 router.post('/register/google', registerGoogle);

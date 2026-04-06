@@ -1,0 +1,166 @@
+<div class="container mt-5">
+  <h2 class="text-center mb-4">Manage Categories</h2>
+
+  <!-- Tabs -->
+  <ul class="nav nav-tabs justify-content-center store-tabs" role="tablist">
+    <li class="nav-item">
+      <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#activeCategories" (click)="loadCategories('ACTIVE')">Active</button>
+    </li>
+    <li class="nav-item">
+      <button class="nav-link" data-bs-toggle="tab" data-bs-target="#inactiveCategories" (click)="loadCategories('INACTIVE')">Inactive</button>
+    </li>
+  </ul>
+
+  <div class="tab-content mt-4">
+
+    <!-- ACTIVE -->
+    <div class="tab-pane fade show active" id="activeCategories">
+      <div class="table-controls d-flex justify-content-between align-items-center mb-2">
+        <mat-form-field appearance="outline" class="form-control-sm">
+          <mat-label>Rows</mat-label>
+          <mat-select [value]="pageSize" (selectionChange)="changePageSize($event.value, 'active')">
+            <mat-option *ngFor="let size of pageSizeOptions" [value]="size">{{ size }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="form-control-sm">
+          <mat-label>Search Active</mat-label>
+          <input matInput (keyup)="applyFilter($event, 'active')" placeholder="Search categories">
+        </mat-form-field>
+      </div>
+
+      <!-- Active Category Table -->
+      <table mat-table [dataSource]="activeDS" matSort class="custom-table">
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+          <td mat-cell *matCellDef="let c">{{ c.name }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="slug">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Slug</th>
+          <td mat-cell *matCellDef="let c">{{ c.slug }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="image">
+          <th mat-header-cell *matHeaderCellDef>Image</th>
+          <td mat-cell *matCellDef="let c">
+            <img [src]="getImageUrl(c)" alt="{{ c.name }}" width="50" height="50">
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef>Status</th>
+          <td mat-cell *matCellDef="let c">{{ c.status }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Actions</th>
+          <td mat-cell *matCellDef="let c">
+            <button class="btn btn-warning btn-sm" (click)="openEdit(c)">Update</button>
+            <button class="btn btn-danger btn-sm" (click)="deleteCategory(c._id)">Delete</button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+
+      <mat-paginator #activePaginator [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions" showFirstLastButtons></mat-paginator>
+    </div>
+
+    <!-- INACTIVE -->
+    <div class="tab-pane fade" id="inactiveCategories">
+      <div class="table-controls d-flex justify-content-between align-items-center mb-2">
+        <mat-form-field appearance="outline" class="form-control-sm">
+          <mat-label>Rows</mat-label>
+          <mat-select [value]="pageSize" (selectionChange)="changePageSize($event.value, 'inactive')">
+            <mat-option *ngFor="let size of pageSizeOptions" [value]="size">{{ size }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="form-control-sm">
+          <mat-label>Search Inactive</mat-label>
+          <input matInput (keyup)="applyFilter($event, 'inactive')" placeholder="Search categories">
+        </mat-form-field>
+      </div>
+
+      <!-- Inactive Category Table -->
+      <table mat-table [dataSource]="inactiveDS" matSort class="custom-table">
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+          <td mat-cell *matCellDef="let c">{{ c.name }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="slug">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Slug</th>
+          <td mat-cell *matCellDef="let c">{{ c.slug }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="image">
+          <th mat-header-cell *matHeaderCellDef>Image</th>
+          <td mat-cell *matCellDef="let c">
+            <img [src]="getImageUrl(c)" alt="{{ c.name }}" width="50" height="50">
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef>Status</th>
+          <td mat-cell *matCellDef="let c">{{ c.status }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Actions</th>
+          <td mat-cell *matCellDef="let c">
+            <button class="btn btn-warning btn-sm" (click)="openEdit(c)">Update</button>
+            <button class="btn btn-danger btn-sm" (click)="deleteCategory(c._id)">Delete</button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+
+      <mat-paginator #inactivePaginator [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions" showFirstLastButtons></mat-paginator>
+    </div>
+  </div>
+</div>
+
+<!-- Modal for Editing Category -->
+<div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true" #editModal>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="editModalLabel">Edit Category</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="editForm">
+          <div class="mb-3">
+            <label for="name" class="form-label">Category Name</label>
+            <input id="name" class="form-control" formControlName="name">
+          </div>
+          <div class="mb-3">
+            <label for="slug" class="form-label">Slug</label>
+            <input id="slug" class="form-control" formControlName="slug" [disabled]="true">
+          </div>
+          <div class="mb-3">
+            <label for="image" class="form-label">Category Image</label>
+            <input id="image" type="file" class="form-control" (change)="onImageChange($event)">
+            <small class="text-muted">Leave empty to keep the current image</small>
+          </div>
+          <div class="mb-3">
+            <label for="status" class="form-label">Status</label>
+            <select id="status" class="form-control" formControlName="status">
+              <option value="ACTIVE">Active</option>
+              <option value="INACTIVE">Inactive</option>
+            </select>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" (click)="updateCategory()">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>

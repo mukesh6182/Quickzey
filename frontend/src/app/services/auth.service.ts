@@ -47,4 +47,17 @@ export class AuthService {
     localStorage.clear();
     this.router.navigate(['/login']);
   }
+
+  forgotPassword(data: any) {
+    return this.http.post(`${this.baseUrl}/forgot-password`, data);
+  }
+
+  verifyForgotOtp(data: any) {
+    return this.http.post(`${this.baseUrl}/verify`, data);
+  }
+
+  resetPassword(data: any) {
+    return this.http.post(`${this.baseUrl}/reset-password`, data);
+  }
+
 }

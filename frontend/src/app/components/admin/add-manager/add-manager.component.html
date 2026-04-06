@@ -31,30 +31,87 @@
 
       <!-- Name -->
       <div class="form-floating mb-3">
-        <input type="text" class="form-control" placeholder="Name" formControlName="name">
+        <input type="text"
+               class="form-control"
+               placeholder="Name"
+               formControlName="name"
+               [class.is-invalid]="isInvalid('name')">
+
         <label>Name</label>
+
+        <div *ngIf="isInvalid('name')" class="text-danger small mt-1">
+          <span *ngIf="managerForm.get('name')?.errors?.['required']">
+            Name is required.
+          </span>
+          <span *ngIf="managerForm.get('name')?.errors?.['minlength']">
+            Name must be at least 3 characters.
+          </span>
+        </div>
       </div>
 
       <!-- Email -->
       <div class="form-floating mb-3">
-        <input type="email" class="form-control" placeholder="Email" formControlName="email">
+        <input type="email"
+               class="form-control"
+               placeholder="Email"
+               formControlName="email"
+               [class.is-invalid]="isInvalid('email')">
+
         <label>Email</label>
+
+        <div *ngIf="isInvalid('email')" class="text-danger small mt-1">
+          <span *ngIf="managerForm.get('email')?.errors?.['required']">
+            Email is required.
+          </span>
+          <span *ngIf="managerForm.get('email')?.errors?.['email']">
+            Enter a valid email.
+          </span>
+        </div>
       </div>
 
       <!-- Phone -->
       <div class="form-floating mb-3">
-        <input type="text" class="form-control" placeholder="Phone" formControlName="phone">
+        <input type="text"
+               class="form-control"
+               placeholder="Phone"
+               formControlName="phone"
+               [class.is-invalid]="isInvalid('phone')">
+
         <label>Phone</label>
+
+        <div *ngIf="isInvalid('phone')" class="text-danger small mt-1">
+          <span *ngIf="managerForm.get('phone')?.errors?.['required']">
+            Phone number is required.
+          </span>
+          <span *ngIf="managerForm.get('phone')?.errors?.['pattern']">
+            Phone must be exactly 10 digits.
+          </span>
+        </div>
       </div>
 
       <!-- Password -->
       <div class="form-floating mb-4">
-        <input type="password" class="form-control" placeholder="Password" formControlName="password">
+        <input type="password"
+               class="form-control"
+               placeholder="Password"
+               formControlName="password"
+               [class.is-invalid]="isInvalid('password')">
+
         <label>Password</label>
+
+        <div *ngIf="isInvalid('password')" class="text-danger small mt-1">
+          <span *ngIf="managerForm.get('password')?.errors?.['required']">
+            Password is required.
+          </span>
+          <span *ngIf="managerForm.get('password')?.errors?.['minlength']">
+            Password must be at least 6 characters.
+          </span>
+        </div>
       </div>
 
       <!-- Submit -->
-      <button class="btn btn-primary w-100 btn-lg" [disabled]="managerForm.invalid || isSubmitting">
+      <button class="btn btn-primary w-100 btn-lg"
+              [disabled]="managerForm.invalid || isSubmitting">
         {{ isSubmitting ? 'Adding Manager...' : 'Add Manager' }}
       </button>
 

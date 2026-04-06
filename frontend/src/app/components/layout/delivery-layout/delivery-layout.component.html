@@ -1,0 +1,36 @@
+<div class="delivery-wrapper">
+  <div class="overlay" *ngIf="isMobileOpen" (click)="isMobileOpen = false"></div>
+  <app-delivery-sidebar [isCollapsed]="isCollapsed" [isMobileOpen]="isMobileOpen"></app-delivery-sidebar>
+
+  <div class="main-content" [class.shifted]="!isCollapsed">
+    <header class="top-nav">
+      <div class="left-nav">
+        <button class="toggle-btn" (click)="handleToggle()">
+          <i class="fa fa-bars"></i>
+        </button>
+        <span class="header-title">Quickzey Delivery</span>
+      </div>
+      
+      <!-- <div class="status-container" [class.locked-mode]="isStatusLocked">
+        <div class="status-info">
+          <span class="pulse-dot" [ngClass]="deliveryStatus.toLowerCase()"></span>
+          <span class="status-text" [ngClass]="deliveryStatus.toLowerCase()">
+            {{ deliveryStatus === 'AVAILABLE' ? 'Online' : (deliveryStatus === 'ASSIGNED' ? 'Busy' : 'Offline') }}
+          </span>
+        </div>
+        
+        <label class="premium-switch">
+          <input type="checkbox" 
+                 [checked]="deliveryStatus === 'AVAILABLE' || deliveryStatus === 'ASSIGNED'" 
+                 [disabled]="isStatusLocked"
+                 (change)="toggleOnlineStatus()">
+          <span class="premium-slider"></span>
+        </label>
+      </div> -->
+    </header>
+
+    <div class="content-area">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>

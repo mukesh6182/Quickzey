@@ -1,0 +1,107 @@
+<div class="container my-5">
+  <div class="row mb-4">
+    <div class="col-12 text-center text-md-start">
+      <h2 class="fw-bold text-dark"><i class="fas fa-box me-2 text-teal"></i> My Orders</h2>
+      <p class="text-muted">Manage your recent orders and track delivery status</p>
+    </div>
+  </div>
+
+  <div *ngIf="isLoading" class="text-center py-5">
+    <div class="spinner-border text-teal" role="status"></div>
+    <p class="mt-2 text-muted">Loading your purchase history...</p>
+  </div>
+
+  <div *ngIf="!isLoading && orders.length === 0" class="text-center py-5 shadow-sm rounded-4 bg-white border">
+    <i class="fas fa-shopping-bag fa-4x text-light mb-3"></i>
+    <h4 class="fw-bold">No orders yet</h4>
+    <p class="text-muted mb-4">You haven't placed any orders. Start exploring our shop!</p>
+    <button routerLink="/" class="btn btn-teal-full px-5 py-2 rounded-pill shadow-sm">Shop Now</button>
+  </div>
+
+  <div *ngIf="!isLoading && orders.length > 0">
+    <div class="card shadow-sm border-0 mb-5 rounded-4 overflow-hidden order-card" *ngFor="let order of orders">
+      
+      <div class="card-header bg-white py-3 px-4 border-bottom">
+        <div class="row align-items-center">
+          <div class="col-md-3 col-6 mb-2 mb-md-0">
+            <small class="text-uppercase text-muted fw-bold d-block">Order ID</small>
+            <span class="fw-bold text-dark">#{{ order._id.substring(order._id.length - 8) }}</span>
+          </div>
+          <div class="col-md-3 col-6 mb-2 mb-md-0">
+            <small class="text-uppercase text-muted fw-bold d-block">Placed On</small>
+            <span class="text-dark">{{ order.createdAt | date:'mediumDate' }}</span>
+          </div>
+          <div class="col-md-3 col-6">
+            <small class="text-uppercase text-muted fw-bold d-block">Status</small>
+            <span class="badge rounded-pill px-3 py-2" [ngClass]="getStatusBadge(order.status)">
+              {{ order.status }}
+            </span>
+          </div>
+          <div class="col-md-3 col-6 text-md-end">
+            <small class="text-uppercase text-muted fw-bold d-block">Total Amount</small>
+            <span class="fs-5 fw-bold text-teal">₹{{ order.totalAmount }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-body p-0">
+        <div class="row g-0">
+          
+          <div class="col-lg-7 border-end bg-white">
+            <div class="p-3">
+              <h6 class="fw-bold mb-3 text-muted px-2 small text-uppercase">Items Ordered</h6>
+              <div *ngFor="let prod of order.products" class="d-flex align-items-center mb-3 px-2">
+                <div class="product-img-box border rounded p-1 bg-light">
+                  <img *ngIf="prod.image" [src]="serverUrl + '/' + prod.image" class="img-fluid rounded" alt="Product">
+                  <i *ngIf="!prod.image" class="fas fa-shopping-basket text-muted"></i>
+                </div>
+                <div class="ms-3 flex-grow-1">
+                  <h6 class="mb-0 fw-bold text-dark">{{ prod.name }}</h6>
+                  <p class="small text-muted mb-0">Qty: {{ prod.quantity }} × ₹{{ prod.price }}</p>
+                </div>
+                <div class="text-end">
+                  <span class="fw-bold text-dark">₹{{ prod.quantity * prod.price }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-5 bg-light-subtle">
+            <div class="p-4">
+              <div class="mb-4">
+                <h6 class="fw-bold text-muted small text-uppercase mb-2">Delivery Address</h6>
+                <div class="d-flex">
+                  <i class="fas fa-map-marker-alt text-teal mt-1 me-2"></i>
+                  <div>
+                    <span class="badge bg-teal-soft text-teal mb-1">{{ order.addressLabel }}</span>
+                    <p class="mb-0 fw-bold text-dark small">{{ order.addressLine }}</p>
+                    <p class="mb-0 text-muted small" *ngIf="order.landmark">{{ order.landmark }}</p>
+                    <p class="mb-0 text-muted small">{{ order.city }}, {{ order.state }} - {{ order.pincode }}</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-6">
+                  <h6 class="fw-bold text-muted small text-uppercase mb-1">Payment</h6>
+                  <p class="small text-dark mb-0"><i class="fas fa-wallet me-1 text-muted"></i> {{ order.paymentMethod }}</p>
+                </div>
+                <div class="col-6">
+                  <h6 class="fw-bold text-muted small text-uppercase mb-1">Customer Info</h6>
+                  <p class="small text-dark mb-0 text-truncate"><i class="fas fa-user me-1 text-muted"></i> {{ order.name }}</p>
+                  <p class="small text-dark mb-0" *ngIf="order.phone"><i class="fas fa-phone me-1 text-muted"></i> {{ order.phone }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="card-footer bg-white py-3 px-4 d-flex justify-content-between align-items-center">
+        <span class="small text-muted">Need help with this order? <a href="#" class="text-teal text-decoration-none">Contact Support</a></span>
+        <!-- <button class="btn btn-sm btn-outline-teal rounded-pill px-4 fw-bold shadow-sm">View Full Invoice</button> -->
+      </div>
+    </div>
+  </div>
+</div>

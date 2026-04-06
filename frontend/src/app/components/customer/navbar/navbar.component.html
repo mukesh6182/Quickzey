@@ -1,29 +1,40 @@
-<!-- Floating Bottom Navbar -->
-<nav class="floating-bottom-navbar">
-  <ul class="nav justify-content-around">
-    <li class="nav-item">
-      <a routerLink="/" routerLinkActive="active" class="nav-link text-center">
-        <i class="bi bi-house-fill"></i>
-        <span class="nav-text">Home</span>
-      </a>
-    </li>
-    <li class="nav-item">
-      <a routerLink="/categories" routerLinkActive="active" class="nav-link text-center">
-        <i class="bi bi-grid-fill"></i>
-        <span class="nav-text">Categories</span>
-      </a>
-    </li>
-    <li class="nav-item">
-      <a routerLink="/cart" routerLinkActive="active" class="nav-link text-center">
-        <i class="bi bi-cart-fill"></i>
-        <span class="nav-text">Cart</span>
-      </a>
-    </li>
-    <li class="nav-item">
-      <a routerLink="/orders" routerLinkActive="active" class="nav-link text-center">
-        <i class="bi bi-bag-fill"></i>
-        <span class="nav-text">Orders</span>
-      </a>
-    </li>
-  </ul>
-</nav>
+<!-- Floating Bottom Navbar Wrapper -->
+<div class="floating-nav-wrapper" [class.hidden]="!isNavVisible">
+
+  <!-- Floating Navbar -->
+  <nav class="floating-bottom-navbar">
+    <ul class="nav justify-content-around">
+      <li class="nav-item">
+        <a routerLink="/" routerLinkActive="active" class="nav-link text-center">          
+          <span class="nav-text">Home</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a routerLink="/categories" routerLinkActive="active" class="nav-link text-center">          
+          <span class="nav-text">Categories</span>
+        </a>
+      </li>
+      <li class="nav-item position-relative">
+        <a routerLink="/cart" routerLinkActive="active" class="nav-link text-center">
+          <span class="nav-text">Cart</span>
+
+          <span *ngIf="cartCount > 0" class="cart-badge">
+            {{ cartCount }}
+          </span>
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a routerLink="/orders" routerLinkActive="active" class="nav-link text-center">          
+          <span class="nav-text">Orders</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <!-- Toggle Button -->
+  <button class="nav-toggle-btn" (click)="toggleNav()">
+    <i class="bi" [ngClass]="isNavVisible ? 'bi-chevron-down' : 'bi-chevron-up'"></i>
+  </button>
+
+</div>

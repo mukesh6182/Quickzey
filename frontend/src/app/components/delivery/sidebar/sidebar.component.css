@@ -1,0 +1,108 @@
+/* Sidebar Styles with Charcoal Gray theme */
+.sidebar {
+    background: #2c3e50; /* Charcoal Gray */
+    width: var(--sidebar-width);
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    transition: var(--transition);
+    color: white;
+    padding: 1rem 0.75rem;
+    z-index: 1000;
+}
+
+.sidebar.collapsed {
+    width: var(--sidebar-collapsed);
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: 800;
+    padding: 1rem;
+    text-align: center;
+    overflow: hidden;
+    white-space: nowrap;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.nav-list {
+    list-style: none;
+    padding: 0;
+    margin-top: 1rem;
+}
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    padding: 0.8rem 1rem;
+    color: #ecf0f1;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: var(--transition);
+    margin-bottom: 5px;
+    cursor: pointer;
+}
+
+.nav-link:hover, .nav-link.active {
+    background: #1a252f; /* Darker Charcoal */
+    color: white;
+}
+
+.nav-link i {
+    min-width: 25px;
+    font-size: 1.2rem;
+    margin-right: 15px;
+}
+
+.arrow-icon {
+    margin-left: auto;
+    font-size: 0.8rem;
+    transition: transform 0.3s;
+}
+
+.rotate-180 {
+    transform: rotate(180deg);
+}
+
+.submenu {
+    list-style: none;
+    padding-left: 1rem;
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height 0.3s ease-out;
+}
+
+.submenu.show {
+    max-height: 200px; /* Adjust based on content */
+}
+
+.sub-link {
+    display: block;
+    padding: 0.6rem 1rem;
+    color: #bdc3c7;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: 0.3s;
+}
+
+.sub-link:hover {
+    color: white;
+}
+
+/* Mobile Screen logic */
+@media (max-width: 992px) {
+    .sidebar {
+        left: -100%;
+    }
+    .sidebar.open {
+        left: 0;
+    }
+}
+
+/* Sidebar logic when collapsed */
+.sidebar.collapsed .link-text,
+.sidebar.collapsed .arrow-icon,
+.sidebar.collapsed .submenu {
+    display: none;
+}

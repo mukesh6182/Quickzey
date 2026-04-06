@@ -1,184 +1,219 @@
-/* Core Layout */
+/* PREMIUM CORE LAYOUT */
 .address-bar {
   background-color: #ffffff;
-  padding: 0.75rem 0;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-  font-family: 'Segoe UI', Roboto, sans-serif;
+  padding: 0.6rem 0;
+  /* Multi-layered shadow for a 'floating' effect */
+  box-shadow: 0 1px 2px rgba(0,0,0,0.02), 0 4px 12px rgba(0,0,0,0.05);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  border-bottom: 1px solid rgba(0,0,0,0.03);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
 }
 
-.text-teal { color: teal; }
+.text-teal { color: #00897b; }
 
-/* Back Button */
+/* BACK BUTTON - Modern & Circular */
 .btn-back {
-  background: #f8f9fa;
-  border: 1px solid #eee;
-  border-radius: 8px;
-  width: 35px;
-  height: 35px;
+  background: #ffffff;
+  border: 1.5px solid #f1f5f9;
+  border-radius: 50%; /* Circle looks more premium for actions */
+  width: 40px;
+  height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: teal;
-  transition: all 0.2s;
+  color: #334155;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.04);
 }
 
 .btn-back:hover {
-  background: teal;
+  background: #00897b;
   color: white;
+  border-color: #00897b;
+  transform: translateX(-3px);
+  box-shadow: 0 4px 12px rgba(0, 137, 123, 0.25);
 }
 
-/* Pincode Section */
+/* PINCODE SECTION - Structured & Clean */
+.pincode-section {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding-left: 10px;
+}
+
 .delivery-text {
   display: flex;
   flex-direction: column;
-  line-height: 1.2;
+  line-height: 1.4;
+  max-width: 250px;
 }
 
 .label {
-  font-size: 0.7rem;
-  color: #777;
+  font-size: 0.65rem;
+  color: #94a3b8;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.05em;
 }
 
 .pincode-value {
-  font-weight: 700;
-  font-size: 1rem;
-  color: #222;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #1e293b;
 }
 
-/* Updated Change Pincode Button */
+.address-text {
+  font-weight: 400;
+  font-size: 0.8rem;
+  color: #64748b;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* CHANGE PINCODE BUTTON - Sophisticated Ghost Style */
 .btn-change-pincode {
-  background-color: teal;
-  color: white;
+  background-color: #f0fdfa;
+  color: #00897b;
   font-weight: 600;
-  font-size: 0.85rem;
-  border: none;
-  border-radius: 5px;
-  padding: 4px 10px;
+  font-size: 0.75rem;
+  border: 1px solid rgba(0, 137, 123, 0.1);
+  border-radius: 20px;
+  padding: 4px 12px;
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 4px;
-  transition: background 0.2s;
+  gap: 5px;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
 }
 
 .btn-change-pincode:hover {
-  background-color: #006666;
+  background-color: #00897b;
+  color: white;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 137, 123, 0.15);
 }
 
-/* Dropdown Styles */
-.dropdown-container {
-  position: relative;
-}
+/* DROPDOWN STYLES (Retaining Structure) */
+.dropdown-container { position: relative; }
 
 .dropdown-trigger {
-  background: #f0f7f7;
-  border: 1px solid #e0eeee;
-  border-radius: 50px; /* Capsule shape */
-  padding: 5px 12px;
+  background: #f8fafc;
+  border: 1px solid #f1f5f9;
+  border-radius: 12px; /* Smoother corner */
+  padding: 6px 14px;
   display: flex;
   align-items: center;
   cursor: pointer;
-  transition: 0.3s;
+  transition: all 0.3s ease;
 }
 
-.dropdown-trigger:hover {
-  background: #e6f2f2;
+.dropdown-trigger:hover { 
+  background: #ffffff;
+  border-color: #00897b;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
 }
 
-.welcome-msg {
-  font-weight: 600;
-  font-size: 0.9rem;
-  margin-right: 8px;
-  color: #333;
+.welcome-msg { 
+  font-weight: 500; 
+  font-size: 0.85rem; 
+  margin-right: 8px; 
+  color: #475569; 
 }
 
-.user-icon {
-  font-size: 1.4rem;
-  color: teal;
+.user-icon { 
+  font-size: 1.5rem; 
+  color: #00897b; 
 }
 
-.arrow-icon {
-  font-size: 0.7rem;
-  color: #888;
+.arrow-icon { 
+  font-size: 0.65rem; 
+  color: #94a3b8; 
+  transition: transform 0.3s ease;
 }
 
-/* The Menu Popup */
+/* Rotate arrow when open */
+.dropdown-trigger:hover .arrow-icon { color: #00897b; }
+
+/* DROPDOWN MENU - Floating Glass Style */
 .dropdown-menu-custom {
   position: absolute;
   right: 0;
-  top: calc(100% + 10px);
-  background: white;
-  min-width: 200px;
-  border-radius: 12px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+  top: calc(100% + 12px);
+  background: #ffffff;
+  min-width: 240px;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.12);
   display: none;
   flex-direction: column;
-  padding: 10px;
+  padding: 8px;
   z-index: 1100;
-  border: 1px solid #eee;
+  border: 1px solid rgba(0,0,0,0.05);
+  /* Animation for the "Show" state */
+  transform-origin: top right;
+  animation: dropdownFade 0.2s ease-out;
+}
+
+@keyframes dropdownFade {
+  from { opacity: 0; transform: scale(0.95) translateY(-10px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
 }
 
 .dropdown-menu-custom.show { display: flex; }
 
 .menu-header {
-  padding: 8px 12px;
-  font-size: 0.75rem;
-  color: #aaa;
-  font-weight: 700;
+  padding: 12px 16px;
+  font-size: 0.7rem;
+  color: #94a3b8;
+  font-weight: 800;
   text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
-/* Updated hover style for dropdown items */
 .menu-item {
-  padding: 10px 12px;
-  color: #444;
+  padding: 10px 16px;
+  color: #334155 !important;
   text-decoration: none;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   font-weight: 500;
-  border-radius: 8px;
+  border-radius: 10px;
   display: flex;
   align-items: center;
-  gap: 10px;
-  transition: 0.2s;
+  gap: 12px;
+  transition: all 0.2s ease;
 }
 
-.menu-item {
-  background: whitet;
-  color: teal !important;
-  justify-content: center;
-  margin-bottom: 5px;
-}
-
-.menu-item:hover{
-  background: teal;
-  color: white !important;
-  justify-content: center;
-  margin-bottom: 5px;
+.menu-item:hover {
+  background: #f0fdfa;
+  color: #00897b !important;
+  padding-left: 20px; /* Slight slide in effect */
 }
 
 .dropdown-divider {
   height: 1px;
-  background: #eee;
-  margin: 8px 0;
+  background: #f1f5f9;
+  margin: 6px 0;
 }
-.btn-teal {
-  background-color: teal;
-  color: white;
+
+/* PREMIUM TOAST */
+.toast-card {
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.15);
   border: none;
+  overflow: hidden;
 }
+.toast-card.success { border-left: 4px solid #10b981; }
+.toast-card.warning { border-left: 4px solid #f59e0b; }
 
-.btn-teal:hover {
-  background-color: #006666;
-}
-
-
-/* RESPONSIVE FIXES */
+/* RESPONSIVE TWEAKS */
 @media (max-width: 576px) {
-  .welcome-msg { display: none; }
+  .address-bar { padding: 0.5rem 0; }
   .pincode-value { font-size: 0.85rem; }
-  .dropdown-trigger { padding: 5px 8px; }
-  .dropdown-menu-custom { right: -10px; width: 180px; }
-  .btn-change-pincode { font-size: 0.8rem; padding: 3px 8px; }
+  .btn-back { width: 34px; height: 34px; }
+  .address-text { max-width: 150px; }
 }

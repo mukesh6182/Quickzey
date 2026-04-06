@@ -1,22 +1,57 @@
 <div class="container my-5">
-  <h2 class="text-center mb-4 category-heading">
-    Shop by Category
-  </h2>
 
-  <div class="row g-3">
+  <!-- Categories Available -->
+  <div *ngIf="categories && categories.length > 0; else noCategory">
 
-    <div
-      class="col-6 col-sm-4 col-lg-3"
-      *ngFor="let cat of categories"
-    >
-      <div class="category-box text-center">
-  <div class="category-img-wrapper">
-    <img [src]="cat.image" [alt]="cat.title" />
-  </div>
-  <p class="category-name">{{ cat.title }}</p>
-</div>
+    <h2 class="text-center mb-4 category-heading">
+      Shop by Category
+    </h2>
 
+    <div class="row g-3">
+      <div 
+        class="col-6 col-sm-4 col-lg-3" 
+        *ngFor="let cat of categories"
+      >
+        <div 
+          class="category-box text-center" 
+          (click)="viewProducts(cat.id)" 
+          style="cursor: pointer;"
+        >
+          <div class="category-img-wrapper">
+            <img [src]="cat.image" [alt]="cat.title" />
+          </div>
+          <p class="category-name">{{ cat.title }}</p>
+        </div>
+      </div>
     </div>
 
   </div>
+
+  <!-- Empty State -->
+  <ng-template #noCategory>
+    <div class="empty-state text-center">
+
+      <!-- Teal Icon -->
+      <div class="empty-icon">
+        <i class="bi bi-shop"></i>
+      </div>
+
+      <h3 class="empty-title">
+        We’re Coming Soon to Your Area!
+      </h3>
+
+      <p class="empty-description">
+        Hi there! We're currently setting up our service at your location. 
+        Soon, you’ll be able to shop from a wide range of products quickly and conveniently.
+      </p>
+
+      <p class="empty-subtext">
+        Stay tuned — exciting categories and deals will be live shortly at your pincode.
+      </p>
+
+      
+
+    </div>
+  </ng-template>
+
 </div>

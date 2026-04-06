@@ -1,0 +1,271 @@
+/* Container & Header */
+.container-fluid {
+  max-width: 1400px;
+}
+
+h2 {
+  color: #2c3e50;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Updated Tabs (Pills Style) */
+.custom-tabs {
+  gap: 10px;
+  border: none;
+}
+
+.custom-tabs .nav-link {
+  cursor: pointer;
+  font-weight: 600;
+  color: #7f8c8d;
+  border: 1px solid #ddd;
+  padding: 10px 25px;
+  border-radius: 30px;
+  transition: all 0.3s ease;
+  background-color: white;
+}
+
+.custom-tabs .nav-link.active {
+  background-color: #2980b9 !important;
+  color: white !important;
+  border-color: #2980b9;
+  box-shadow: 0 4px 12px rgba(41, 128, 185, 0.3);
+}
+
+.custom-tabs .nav-link:hover:not(.active) {
+  background-color: #f8f9fa;
+  border-color: #2980b9;
+  color: #2980b9;
+}
+.custom-tabs .nav-link:hover{
+  background-color: #f8f9fa;
+  border-color: #2980b9;
+  color: #2980b9;
+}
+.nav-link:hover{
+  background-color:  #2980b9;
+  border-color:#f8f9fa;
+  color: #f8f9fa;
+}
+/* Search Box Styling */
+.search-box input {
+  border-radius: 20px;
+  padding: 0.5rem 1rem;
+  border: 1px solid #ddd;
+  transition: border-color 0.3s;
+}
+
+.search-box input:focus {
+  border-color: #2980b9;
+  box-shadow: 0 0 0 0.2rem rgba(41, 128, 185, 0.1);
+  outline: none;
+}
+
+/* Angular Material Table Overrides */
+.custom-mat-table {
+  width: 100%;
+  background: white;
+}
+
+/* Header Cells */
+.mat-mdc-header-cell {
+  background-color: #2980b9 !important;
+  color: white !important;
+  font-weight: bold !important;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  padding: 15px !important;
+  text-align: center !important;
+}
+
+/* Data Cells */
+.mat-mdc-cell {
+  padding: 12px 15px !important;
+  text-align: center !important;
+  color: #34495e;
+  border-bottom: 1px solid #eee !important;
+}
+
+/* Row Hover & Zebra Striping */
+.mat-mdc-row:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.mat-mdc-row:hover {
+  background-color: #e8f4fd !important;
+  transition: background-color 0.2s ease;
+}
+
+/* Address Cell Truncation */
+.address-cell {
+  max-width: 250px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Status Badges */
+.badge {
+  padding: 6px 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 4px;
+  letter-spacing: 0.5px;
+}
+
+/* Paginator Styling */
+.mat-mdc-paginator {
+  background-color: #fdfdfd !important;
+  border-top: 1px solid #eee;
+  border-radius: 0 0 10px 10px;
+}
+
+/* Shadow Wrapper */
+.tab-content {
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+/* Mobile View (Below 992px) */
+@media (max-width: 991px) {
+  /* Hide specific columns on smaller screens to prevent overlap */
+  .mat-column-phone, 
+  .mat-column-payment, 
+  .mat-column-placedAt {
+    display: none !important;
+  }
+}
+
+/* Extreme Mobile (Below 768px) - Switching to Block Layout */
+@media (max-width: 767px) {
+  .custom-mat-table {
+    display: block;
+  }
+  
+  .mat-mdc-header-row {
+    display: none; /* Hide headers */
+  }
+
+  .mat-mdc-row {
+    display: block;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    padding: 10px;
+    background: white !important;
+  }
+
+  .mat-mdc-cell {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 5px !important;
+    text-align: left !important;
+    border: none !important;
+  }
+
+  /* Add Labels for mobile context */
+  .mat-mdc-cell::before {
+    content: attr(data-label);
+    font-weight: bold;
+    color: #2980b9;
+    margin-right: 10px;
+  }
+}
+/* Custom Header Color for the Assignment Modal */
+.modal-header.bg-dark {
+    background-color: #2980b9 !important; /* Your specific blue */
+    border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+}
+
+.modal-title {
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    color: #ffffff;
+}
+
+/* Ensure the white close button looks sharp against the blue */
+.btn-close-white {
+    filter: invert(1) grayscale(100%) brightness(200%);
+    opacity: 0.8;
+}
+
+.btn-close-white:hover {
+    opacity: 1;
+}
+
+/* Optional: Match the "Assign" buttons inside the list to the same blue theme */
+.btn-outline-success {
+    color: #2980b9;
+    border-color: #2980b9;
+}
+
+.btn-outline-success:hover {
+    background-color: #2980b9;
+    border-color: #2980b9;
+    color: white;
+}
+/* Light and Elegant Partner Cards */
+.partner-card {
+    border: 1px solid #f1f1f1 !important; /* Very light border */
+    background-color: #ffffff;
+    transition: all 0.2s ease-in-out;
+    margin-bottom: 12px;
+}
+
+.partner-card:hover {
+    border-color: #2980b9 !important; /* Highlight on hover */
+    background-color: #f8fbff;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.partner-info h6 {
+    color: #2c3e50;
+    font-size: 0.95rem;
+}
+
+.partner-distance-badge {
+    background-color: #e8f4fd;
+    color: #2980b9;
+    font-size: 0.75rem;
+    padding: 2px 8px;
+    border-radius: 4px;
+}
+.partner-card-premium {
+    border: 1px solid #f0f0f0; /* Very light, faint border */
+    transition: all 0.2s ease;
+}
+
+.partner-card-premium:hover {
+    border-color: #2980b9;
+    box-shadow: 0 8px 15px rgba(0,0,0,0.05) !important;
+    transform: translateY(-2px);
+}
+
+.avatar-placeholder {
+    font-size: 1.2rem;
+    letter-spacing: 1px;
+}
+
+.hover-row:hover {
+    background-color: #f8f9fa;
+    cursor: pointer;
+}
+.rounded-4 { border-radius: 1.25rem !important; }
+  
+  .bg-primary-subtle { background-color: #e3f2fd !important; }
+
+  .partner-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border: 1px solid transparent !important;
+  }
+
+  .partner-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.08) !important;
+    border-color: #3498db !important;
+  }
+
+  .transition-hover {
+    cursor: pointer;
+  }

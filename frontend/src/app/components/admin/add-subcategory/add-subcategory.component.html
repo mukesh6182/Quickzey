@@ -1,0 +1,79 @@
+<!-- Toast Message -->
+<div *ngIf="toastMessage" class="modern-toast-wrapper">
+  <div class="modern-toast-card" [ngClass]="toastType">
+    <div class="toast-accent"></div>
+    <div class="toast-content">
+      <div class="toast-icon">
+        <i *ngIf="toastType === 'success'" class="fas fa-check-circle"></i>
+        <i *ngIf="toastType === 'danger'" class="fas fa-exclamation-circle"></i>
+      </div>
+      <div class="toast-body-text">
+        <strong class="toast-status">
+          {{ toastType === 'success' ? 'Success' : 'Error' }}
+        </strong>
+        <p class="toast-msg-content">{{ toastMessage }}</p>
+      </div>
+      <button class="btn-toast-close" (click)="toastMessage=null">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Centered Form -->
+<div class="page-wrapper">
+  <div class="form-card">
+    <h2 class="fw-bold mb-2">Add New Subcategory</h2>
+    <p class="text-muted mb-4">Fill in the subcategory details below</p>
+
+    <form [formGroup]="subCategoryForm" (ngSubmit)="onSubmit()">
+      <!-- Subcategory Name -->
+      <div class="form-floating mb-3">
+        <input class="form-control" placeholder="Subcategory Name"
+               formControlName="name" [class.is-invalid]="isInvalid('name')">
+        <label for="subCategoryName">Subcategory Name</label>
+        <div *ngIf="isInvalid('name')" class="text-danger small mt-1">
+          <span *ngIf="subCategoryForm.get('name')?.errors?.['required']">Name is required.</span>
+          <span *ngIf="subCategoryForm.get('name')?.errors?.['minlength']">Name must be at least 3 characters.</span>
+        </div>
+      </div>
+
+      <!-- Parent Category Dropdown -->
+      <div class="form-floating mb-3">
+        <select class="form-control" formControlName="category" [class.is-invalid]="isInvalid('category')">
+          <option value="" disabled>Select Category</option>
+          <option *ngFor="let cat of categories" [value]="cat._id">{{ cat.name }}</option>
+        </select>
+        <label for="categorySelect">Parent Category</label>
+        <div *ngIf="isInvalid('category')" class="text-danger small mt-1">
+          Category is required.
+        </div>
+      </div>
+
+      <!-- Subcategory Image -->
+      <div class="form-floating mb-3">
+        <input type="file" class="form-control" (change)="onFileChange($event)"
+               [class.is-invalid]="isInvalid('image')" accept="image/*">
+        <label for="subCategoryImage">Subcategory Image</label>
+        <div *ngIf="isInvalid('image')" class="text-danger small mt-1">
+          Image is required.
+        </div>
+      </div>
+
+      <!-- Subcategory Order -->
+      <div class="form-floating mb-3">
+        <input class="form-control" placeholder="Order | Optional | Default 0"
+               formControlName="order" [class.is-invalid]="isInvalid('order')">
+        <label for="subCategoryOrder">Order</label>
+        <div *ngIf="isInvalid('order')" class="text-danger small mt-1">
+          Order must be valid.
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <button class="btn btn-primary w-100 btn-lg" [disabled]="subCategoryForm.invalid || isSubmitting">
+        {{ isSubmitting ? 'Adding Subcategory...' : 'Add Subcategory' }}
+      </button>
+    </form>
+  </div>
+</div>

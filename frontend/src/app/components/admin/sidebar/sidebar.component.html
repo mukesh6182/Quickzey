@@ -39,8 +39,7 @@
       <div class="nav-link" (click)="toggleMenu('store')">
         <i class="fa fa-store"></i>
         <span class="link-text">Store</span>
-        <i class="fa fa-chevron-down arrow-icon"
-           [class.rotate-180]="activeMenu === 'store'"></i>
+        <i class="fa fa-chevron-down arrow-icon" [class.rotate-180]="activeMenu === 'store'"></i>
       </div>
       <ul class="submenu" [class.show]="activeMenu === 'store'">
         <li><a routerLink="/admin/add-store" class="sub-link">Add Store</a></li>
@@ -51,23 +50,51 @@
     <!-- Categories -->
     <li class="menu-item">
       <div class="nav-link" (click)="toggleMenu('categories')">
-        <i class="fa fa-users"></i>
-        <span class="link-text">Users</span>
-        <i class="fa fa-chevron-down arrow-icon"
-           [class.rotate-180]="activeMenu === 'categories'"></i>
+        <i class="fa fa-th"></i> <!-- Icon for Categories -->
+        <span class="link-text">Categories</span>
+        <i class="fa fa-chevron-down arrow-icon" [class.rotate-180]="activeMenu === 'categories'"></i>
       </div>
       <ul class="submenu" [class.show]="activeMenu === 'categories'">
+        <li><a routerLink="/admin/add-category" class="sub-link">Add Category</a></li>
+        <li><a routerLink="/admin/manage-categories" class="sub-link">Manage Categories</a></li>
+        <li><a routerLink="/admin/add-subcategory" class="sub-link">Add Subcategory</a></li>
+        <li><a routerLink="/admin/manage-subcategories" class="sub-link">Manage Subcategories</a></li>
+      </ul>
+    </li>
+
+    <!-- Products (Added) -->
+    <li class="menu-item">
+      <div class="nav-link" (click)="toggleMenu('products')">
+        <i class="fa fa-cogs"></i> <!-- Icon for Products -->
+        <span class="link-text">Products</span>
+        <i class="fa fa-chevron-down arrow-icon" [class.rotate-180]="activeMenu === 'products'"></i>
+      </div>
+      <ul class="submenu" [class.show]="activeMenu === 'products'">
+        <li><a routerLink="/admin/add-product" class="sub-link">Add Product</a></li>
+        <li><a routerLink="/admin/manage-product" class="sub-link">Manage Products</a></li>
+      </ul>
+    </li>
+
+    <!-- Users -->
+    <li class="menu-item">
+      <div class="nav-link" (click)="toggleMenu('users')">
+        <i class="fa fa-users"></i> <!-- Corrected to fa-users for "Users" -->
+        <span class="link-text">Users</span>
+        <i class="fa fa-chevron-down arrow-icon" [class.rotate-180]="activeMenu === 'users'"></i>
+      </div>
+      <ul class="submenu" [class.show]="activeMenu === 'users'">
         <li><a routerLink="/admin/add-manager" class="sub-link">Add Manager</a></li>
+        <li><a routerLink="/admin/add-delivery-partner" class="sub-link">Add Delivery Partner</a></li>
         <li><a routerLink="/admin/manage-users" class="sub-link">Manage Users</a></li>
       </ul>
     </li>
-        <li class="menu-item dashboard-item">
-      <a  (click)="logout()" href="/" class="nav-link">
+
+    <!-- Logout -->
+    <li class="menu-item dashboard-item">
+      <a (click)="logout()" href="/" class="nav-link">
         <i class="fas fa-sign-out-alt"></i>
         <span class="link-text">Logout</span>
       </a>
     </li>
   </ul>
 </aside>
-
-    

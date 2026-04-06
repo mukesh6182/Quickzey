@@ -1,0 +1,102 @@
+<div class="container my-5">
+  <h2 class="text-center mb-4">My Store Products</h2>
+
+  <!-- Loading -->
+  <div *ngIf="loading" class="text-center my-5">
+    <div class="spinner-border text-primary"></div>
+  </div>
+
+  <!-- Empty message -->
+  <div *ngIf="!loading && storeProducts.length === 0" class="text-center text-muted my-5">
+    <h5>{{ message }}</h5>
+  </div>
+
+  <!-- Table -->
+  <div *ngIf="storeProducts.length > 0" class="table-responsive">
+    <table class="table table-bordered table-hover align-middle">
+      <thead class="table-light">
+        <tr>
+          <th>#</th>
+          <th>Image</th>
+          <th>Product</th>
+          <th>Category</th>
+          <th>Subcategory</th>
+          <th>Price (₹)</th>
+          <th>Stock</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let sp of storeProducts; let i = index">
+          <td>{{ i + 1 }}</td>
+
+          <td>
+            <img
+            [src]="sp.product.images.length > 0 ? getImageUrl(sp.product.images[0]) : 'assets/no-image.png'"
+              class="product-img"
+            />
+          </td>
+
+          <td>{{ sp.product.name }}</td>
+          <td>{{ sp.product.category?.name || '-' }}</td>
+          <td>{{ sp.product.subCategory?.name || '-' }}</td>
+          <td>{{ sp.product.price }}</td>
+          <td>{{ sp.stock }}</td>
+
+          <td>
+            <span class="badge" [ngClass]="{
+              'bg-success': sp.status === 'AVAILABLE',
+              'bg-secondary': sp.status !== 'AVAILABLE'
+            }">
+              {{ sp.status }}
+            </span>
+          </td>
+
+          <td class="text-center">
+            <button class="btn btn-sm btn-primary me-2" (click)="openEditModal(sp)">
+              Edit
+            </button>
+            <button class="btn btn-sm btn-danger" (click)="deleteProduct(sp._id)">
+              Delete
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- EDIT MODAL -->
+<div *ngIf="showModal" class="modal fade show d-block" style="background: rgba(0,0,0,.5)">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5>Edit Product</h5>
+        <button class="btn-close" (click)="closeModal()"></button>
+      </div>
+
+      <div class="modal-body">
+        <div class="mb-3">
+          <label>Stock</label>
+          <input type="number" class="form-control" [(ngModel)]="editStock" min="0" />
+        </div>
+
+        <div class="mb-3">
+          <label>Status</label>
+          <select class="form-select" [(ngModel)]="editStatus">
+            <option value="AVAILABLE">AVAILABLE</option>
+            <option value="UNAVAILABLE">UNAVAILABLE</option>
+            <option value="DISABLED">DISABLED</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-secondary" (click)="closeModal()">Cancel</button>
+        <button class="btn btn-primary" (click)="updateProduct()">Update</button>
+      </div>
+    </div>
+  </div>
+</div>

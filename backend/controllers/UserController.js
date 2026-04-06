@@ -1,18 +1,14 @@
+const Address = require('../models/Address'); // Import your Address model
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 require('dotenv').config();
 const sendMail = require("../utils/sendMail");
 const generateToken = require('../utils/generateToken');
+const { generateForgotPasswordEmail } = require('../utils/generateOtpEmail');
 
-
-
-// Generate 6-digit OTP
 const generateOtp = () => Math.floor(100000 + Math.random() * 900000).toString();
 
-/* ======================
-   MANUAL REGISTER (OTP)
-====================== */
 const registerManual = async (req, res) => {
   try {
     const { name, email, phone, password } = req.body;
@@ -94,9 +90,6 @@ const registerManual = async (req, res) => {
 };
 
 
-/* ======================
-   VERIFY EMAIL OTP
-====================== */
 const verifyEmailOtp = async (req, res) => {
   try {    
     const { email, otp } = req.body;
@@ -132,9 +125,6 @@ const verifyEmailOtp = async (req, res) => {
   }
 };
 
-/* ======================
-   MANUAL LOGIN
-====================== */
 const loginManual = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -200,9 +190,6 @@ const loginManual = async (req, res) => {
   }
 };
 
-/* ======================
-   GOOGLE REGISTER / LOGIN
-====================== */
 const registerGoogle = async (req, res) => {
   try {
     const { googleId, email, name } = req.body;
@@ -233,7 +220,6 @@ const registerGoogle = async (req, res) => {
       });
     }
 
-    // 2️⃣ New Google user → register
     user = new User({
       name,
       email,
@@ -320,14 +306,9 @@ const addManager=async(req,res)=>{
   }
 }
 
-/* ======================
-   1️⃣ GET ALL USERS ROLE-WISE
-====================== */
 const getAllUsers = async (req, res) => {
   try {
     const users = await User.find().select('-password -emailOtp -emailOtpExpires -__v');
-
-    // No grouping
     res.status(200).json({
       success: true,
       count: users.length,
@@ -339,9 +320,6 @@ const getAllUsers = async (req, res) => {
   }
 };
 
-/* ======================
-   2️⃣ UPDATE MANAGER
-====================== */
 const updateUser = async (req, res) => {
   try {
     const { userId } = req.params;
@@ -371,7 +349,7 @@ const updateUser = async (req, res) => {
 
     await user.save();
 
-    // Remove sensitive fields before sending response
+    
     const { password, emailOtp, emailOtpExpires, ...userData } = user.toObject();
 
     res.status(200).json({ message: 'User updated successfully.', user: userData });
@@ -381,9 +359,6 @@ const updateUser = async (req, res) => {
   }
 };
 
-/* ======================
-   3️⃣ DELETE MANAGER (SOFT DELETE)
-====================== */
 const deleteUser = async (req, res) => {
   try {
     const { userId } = req.params;
@@ -421,10 +396,317 @@ const getUserById = async (req, res) => {
   }
 };
 
+const changePassword = async (req, res) => {
+  try {
+    const { currentPassword, newPassword, confirmPassword } = req.body;
 
-/* ======================
-   Export all functions
-====================== */
+    // 1️⃣ Validate input
+    if (!currentPassword || !newPassword || !confirmPassword) {
+      return res.status(400).json({ message: 'All fields are required' });
+    }
+
+    if (newPassword !== confirmPassword) {
+      return res.status(400).json({ message: 'New passwords do not match' });
+    }
+
+    if (newPassword.length < 6) {
+      return res.status(400).json({ message: 'Password must be at least 6 characters' });
+    }
+
+    // 2️⃣ Get user (explicitly select password)
+    const user = await User.findById(req.user.id).select('+password');
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // 3️⃣ Block Google users
+    if (user.provider !== 'manual') {
+      return res.status(400).json({
+        message: 'Password change not allowed for social login users',
+      });
+    }
+
+    // 4️⃣ Verify current password
+    const isMatch = await user.matchPassword(currentPassword);
+    if (!isMatch) {
+      return res.status(401).json({ message: 'Current password is incorrect' });
+    }
+
+    // 5️⃣ Prevent reusing old password
+    const isSamePassword = await user.matchPassword(newPassword);
+    if (isSamePassword) {
+      return res.status(400).json({
+        message: 'New password must be different from old password',
+      });
+    }
+
+    // 6️⃣ Update password
+    user.password = newPassword;
+    await user.save(); // pre-save hook hashes password
+
+    return res.status(200).json({
+      success: true,
+      message: 'Password changed successfully',
+    });
+
+  } catch (error) {
+    console.error('Change Password Error:', error);
+    return res.status(500).json({ message: 'Server Error' });
+  }
+};
+
+const forgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return res.status(400).json({ message: 'Email is required' });
+    }
+
+    const user = await User.findOne({ email });
+
+    if (!user || user.provider !== 'manual') {
+      return res.status(400).json({ message: 'User not found' });
+    }
+
+    if (user.status !== 'ACTIVE') {
+      return res.status(403).json({ message: 'Account not active' });
+    }
+
+    const otp = generateOtp();
+
+    user.emailOtp = otp;
+    user.emailOtpExpires = Date.now() + 10 * 60 * 1000;
+    await user.save();
+
+    
+
+    await sendMail(
+      user.email,
+      'Quickzey Password Reset OTP',
+      generateForgotPasswordEmail(user.name, otp)
+    );
+
+    res.status(200).json({
+      message: 'OTP sent to email',
+    });
+
+  } catch (error) {
+    console.error('Forgot Password Error:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+const verifyForgotPasswordOtp = async (req, res) => {
+  try {
+    const { email, otp } = req.body;
+
+    if (!email || !otp) {
+      return res.status(400).json({ message: 'Email and OTP are required' });
+    }
+
+    const user = await User.findOne({ email }).select('+emailOtp +emailOtpExpires');
+
+    if (!user) {
+      return res.status(400).json({ message: 'Invalid request' });
+    }
+
+    if (
+      String(user.emailOtp) !== String(otp) ||
+      user.emailOtpExpires < Date.now()
+    ) {
+      return res.status(400).json({ message: 'Invalid or expired OTP' });
+    }
+
+    // ✅ OTP verified — DO NOT reset password yet
+    res.status(200).json({
+      message: 'OTP verified successfully',
+      allowPasswordReset: true,
+      email
+    });
+
+  } catch (error) {
+    console.error('Verify Forgot OTP Error:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+const resetPassword = async (req, res) => {
+  try {
+    const { email, newPassword, confirmPassword } = req.body;
+
+    if (!email || !newPassword || !confirmPassword) {
+      return res.status(400).json({ message: 'All fields are required' });
+    }
+
+    if (newPassword !== confirmPassword) {
+      return res.status(400).json({ message: 'Passwords do not match' });
+    }
+
+    if (newPassword.length < 6) {
+      return res.status(400).json({ message: 'Password must be at least 6 characters' });
+    }
+
+    const user = await User.findOne({ email }).select('+password');
+
+    if (!user) {
+      return res.status(400).json({ message: 'Invalid request' });
+    }
+    const isNewPasswordSameAsOld = await user.matchPassword(newPassword);
+
+    if (isNewPasswordSameAsOld) {
+      return res.status(400).json({ message: 'New password cannot be the same as the old password. Please choose a different one.' });
+    }
+
+    user.password = newPassword;
+    user.emailOtp = undefined;
+    user.emailOtpExpires = undefined;
+
+    await user.save();
+
+    res.status(200).json({
+      message: 'Password reset successful. Please login.',
+    });
+
+  } catch (error) {
+    console.error('Reset Password Error:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+// Get Logged-in User Profile
+const getMyProfile = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id); // req.user.id comes from protect middleware
+    if (!user) return res.status(404).json({ message: 'User not found' });
+    res.status(200).json({ success: true, user });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+// Update Logged-in User Profile
+const updateMyProfile = async (req, res) => {
+  try {
+    const { name, phone } = req.body;
+    const user = await User.findById(req.user.id);
+
+    if (name) user.name = name;
+    
+    if (phone && phone !== user.phone) {
+      const exists = await User.findOne({ phone });
+      if (exists) return res.status(409).json({ message: 'Phone already in use' });
+      user.phone = phone;
+    }
+
+    await user.save();
+    res.status(200).json({ message: 'Profile updated successfully', user });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+const addDeliveryPartner = async (req, res) => {
+  try {
+    const { name, email, phone, password, address } = req.body;
+
+    // 1️⃣ Validate required fields
+    if (!name || !email || !phone || !password || !address) {
+      return res.status(400).json({ message: "Required fields are missing" });
+    }
+
+    // 2️⃣ Validate email and phone uniqueness
+    const emailExists = await User.findOne({ email });
+    const phoneExists = await User.findOne({ phone });
+
+    if (emailExists) {
+      return res.status(409).json({ message: "Email already exists!" });
+    }
+    if (phoneExists) {
+      return res.status(409).json({ message: "Phone number already exists!" });
+    }
+
+    // 3️⃣ Create new delivery partner user
+    const user = new User({
+      name,
+      email,
+      phone,
+      password,
+      role: "DELIVERY",
+      provider: 'manual',
+      status: "ACTIVE",
+      isEmailVerified: true,
+    });
+
+    await user.save();
+
+    // 4️⃣ Create the address
+    const newAddress = new Address({
+      user: user._id,
+      label: address.label || 'HOME',
+      addressLine: address.addressLine,
+      landmark: address.landmark || '',
+      city: address.city,
+      state: address.state,
+      pincode: address.pincode,
+      isDefault: address.isDefault || true,
+      isActive: true,
+    });
+
+    await newAddress.save();
+
+    res.status(201).json({
+      message: "Delivery Partner added successfully",
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        phone: user.phone,
+        role: user.role,
+      },
+      address: newAddress,
+    });
+
+  } catch (error) {
+    console.error("Add Delivery Partner Error:", error);
+
+    if (error.name === 'ValidationError') {
+      const errors = Object.values(error.errors).map(err => err.message);
+      return res.status(400).json({ message: 'Validation failed', errors });
+    }
+
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+const toggleDeliveryStatus = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id);
+
+    if (!user || user.role !== 'DELIVERY') {
+      return res.status(404).json({ message: 'Delivery partner not found.' });
+    }
+    
+    if (user.deliveryStatus === 'ASSIGNED') {
+      return res.status(400).json({ 
+        message: 'Cannot change status while you have an active delivery task.' 
+      });
+    }
+
+    user.deliveryStatus = user.deliveryStatus === 'AVAILABLE' ? 'OFF_DUTY' : 'AVAILABLE';
+    
+    await user.save();
+    
+
+    res.status(200).json({ 
+      success: true, 
+      message: `Status updated to ${user.deliveryStatus}`, 
+      deliveryStatus: user.deliveryStatus 
+    });
+  } catch (error) {
+    console.error('Toggle Status Error:', error);
+    res.status(500).json({ message: 'Server error while toggling status.' });
+  }
+};
+
 module.exports = {
   registerManual,
   verifyEmailOtp,
@@ -435,5 +717,13 @@ module.exports = {
   getAllUsers,
   updateUser,
   deleteUser,
-  getUserById
+  getUserById,
+  changePassword,
+  forgotPassword,
+  verifyForgotPasswordOtp,
+  resetPassword,
+  getMyProfile,
+  updateMyProfile,
+  addDeliveryPartner,
+  toggleDeliveryStatus
 };

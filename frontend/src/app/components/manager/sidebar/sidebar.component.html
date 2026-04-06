@@ -1,0 +1,68 @@
+<!-- Toast Message -->
+<div *ngIf="toastMessage" class="toast-wrapper">
+  <div class="toast-card" [ngClass]="toastType">
+    <div class="toast-accent"></div>
+    <div class="toast-content-wrapper">
+      <div class="toast-icon">
+        <i *ngIf="toastType === 'success'" class="fas fa-check-circle"></i>
+        <i *ngIf="toastType === 'danger'" class="fas fa-exclamation-circle"></i>
+      </div>
+      <div class="toast-text">
+        <span class="toast-title">Success</span>
+        <p class="toast-message">{{ toastMessage }}</p>
+      </div>
+      <button class="toast-close" (click)="toastMessage=null">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+  </div>
+</div>
+
+<aside class="sidebar" [class.collapsed]="isCollapsed" [class.open]="isMobileOpen">
+  <!-- Logo -->
+  <div class="logo" routerLink="/manager">
+    <i class="fa fa-bolt"></i> <span>Quickzey</span>
+  </div>
+
+  <!-- Navigation -->
+  <ul class="nav-list">
+    <!-- Dashboard -->
+    <li class="menu-item dashboard-item">
+      <a routerLink="/manager" class="nav-link">
+        <i class="fa fa-home"></i>
+        <span class="link-text">Dashboard</span>
+      </a>
+    </li>
+
+    <!-- Products -->
+    <li class="menu-item">
+      <div class="nav-link" (click)="toggleMenu('products')">
+        <i class="fa fa-cogs"></i>
+        <span class="link-text">Products</span>
+        <i class="fa fa-chevron-down arrow-icon" [class.rotate-180]="activeMenu === 'products'"></i>
+      </div>
+      <ul class="submenu" [class.show]="activeMenu === 'products'">
+        <li><a routerLink="/manager/add-product" class="sub-link">Add Product</a></li>
+        <li><a routerLink="/manager/manage-product" class="sub-link">Manage Products</a></li>
+      </ul>
+    </li>
+     <li class="menu-item">
+      <div class="nav-link" (click)="toggleMenu('orders')">
+        <i class="fa fa-shopping-cart"></i>
+        <span class="link-text">Orders</span>
+        <i class="fa fa-chevron-down arrow-icon" [class.rotate-180]="activeMenu === 'orders'"></i>
+      </div>
+      <ul class="submenu" [class.show]="activeMenu === 'orders'">
+        <li><a routerLink="/manager/manage-orders" class="sub-link">Manage Orders</a></li>
+      </ul>
+    </li>
+
+    <!-- Logout -->
+    <li class="menu-item dashboard-item">
+      <a (click)="logout()" href="/" class="nav-link">
+        <i class="fas fa-sign-out-alt"></i>
+        <span class="link-text">Logout</span>
+      </a>
+    </li>
+  </ul>
+</aside>

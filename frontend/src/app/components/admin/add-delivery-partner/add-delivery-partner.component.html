@@ -1,0 +1,131 @@
+<!-- Toast -->
+<div *ngIf="toastMessage" class="modern-toast-wrapper">
+  <div class="modern-toast-card" [ngClass]="toastType">
+    <div class="toast-accent"></div>
+    <div class="toast-content">
+      <div class="toast-icon">
+        <i *ngIf="toastType === 'success'" class="fas fa-check-circle"></i>
+        <i *ngIf="toastType === 'danger'" class="fas fa-exclamation-circle"></i>
+      </div>
+      <div class="toast-body-text">
+        <strong class="toast-status">
+          {{ toastType === 'success' ? 'Success' : 'Error' }}
+        </strong>
+        <p class="toast-msg-content">{{ toastMessage }}</p>
+      </div>
+      <button class="btn-toast-close" (click)="toastMessage=null">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Centered Form -->
+<div class="page-wrapper">
+  <div class="form-card">
+    <h2 class="fw-bold mb-2">Add Delivery Partner</h2>
+    <p class="text-muted mb-4">Fill in the details below</p>
+
+    <form [formGroup]="deliveryForm" (ngSubmit)="onSubmit()">
+
+      <!-- Name -->
+      <div class="form-floating mb-3">
+        <input type="text" class="form-control" placeholder="Name" formControlName="name"
+               [class.is-invalid]="isInvalid('name')">
+        <label>Name</label>
+        <div *ngIf="isInvalid('name')" class="text-danger small mt-1">
+          <span *ngIf="deliveryForm.get('name')?.errors?.['required']">Name is required.</span>
+          <span *ngIf="deliveryForm.get('name')?.errors?.['minlength']">Name must be at least 3 characters.</span>
+        </div>
+      </div>
+
+      <!-- Email -->
+      <div class="form-floating mb-3">
+        <input type="email" class="form-control" placeholder="Email" formControlName="email"
+               [class.is-invalid]="isInvalid('email')">
+        <label>Email</label>
+        <div *ngIf="isInvalid('email')" class="text-danger small mt-1">
+          <span *ngIf="deliveryForm.get('email')?.errors?.['required']">Email is required.</span>
+          <span *ngIf="deliveryForm.get('email')?.errors?.['email']">Enter a valid email.</span>
+        </div>
+      </div>
+
+      <!-- Phone -->
+      <div class="form-floating mb-3">
+        <input type="text" class="form-control" placeholder="Phone" formControlName="phone"
+               [class.is-invalid]="isInvalid('phone')">
+        <label>Phone</label>
+        <div *ngIf="isInvalid('phone')" class="text-danger small mt-1">
+          <span *ngIf="deliveryForm.get('phone')?.errors?.['required']">Phone number is required.</span>
+          <span *ngIf="deliveryForm.get('phone')?.errors?.['pattern']">Phone must be exactly 10 digits.</span>
+        </div>
+      </div>
+
+      <!-- Password -->
+      <div class="form-floating mb-3">
+        <input type="password" class="form-control" placeholder="Password" formControlName="password"
+               [class.is-invalid]="isInvalid('password')">
+        <label>Password</label>
+        <div *ngIf="isInvalid('password')" class="text-danger small mt-1">
+          <span *ngIf="deliveryForm.get('password')?.errors?.['required']">Password is required.</span>
+          <span *ngIf="deliveryForm.get('password')?.errors?.['minlength']">Password must be at least 6 characters.</span>
+        </div>
+      </div>
+
+      <h4 class="fw-bold mb-2 mt-4">Address Details</h4>
+
+      <!-- Address Line -->
+      <div class="form-floating mb-3">
+        <input type="text" class="form-control" placeholder="Address Line" formControlName="addressLine"
+               [class.is-invalid]="isInvalid('addressLine')">
+        <label>Address Line</label>
+        <div *ngIf="isInvalid('addressLine')" class="text-danger small mt-1">
+          Address is required.
+        </div>
+      </div>
+
+      <!-- Landmark -->
+      <div class="form-floating mb-3">
+        <input type="text" class="form-control" placeholder="Landmark" formControlName="landmark">
+        <label>Landmark (optional)</label>
+      </div>
+
+      <!-- City -->
+      <div class="form-floating mb-3">
+        <input type="text" class="form-control" placeholder="City" formControlName="city"
+               [class.is-invalid]="isInvalid('city')">
+        <label>City</label>
+        <div *ngIf="isInvalid('city')" class="text-danger small mt-1">
+          City is required.
+        </div>
+      </div>
+
+      <!-- State -->
+      <div class="form-floating mb-3">
+        <input type="text" class="form-control" placeholder="State" formControlName="state"
+               [class.is-invalid]="isInvalid('state')">
+        <label>State</label>
+        <div *ngIf="isInvalid('state')" class="text-danger small mt-1">
+          State is required.
+        </div>
+      </div>
+
+      <!-- Pincode -->
+      <div class="form-floating mb-4">
+        <input type="text" class="form-control" placeholder="Pincode" formControlName="pincode"
+               [class.is-invalid]="isInvalid('pincode')">
+        <label>Pincode</label>
+        <div *ngIf="isInvalid('pincode')" class="text-danger small mt-1">
+          <span *ngIf="deliveryForm.get('pincode')?.errors?.['required']">Pincode is required.</span>
+          <span *ngIf="deliveryForm.get('pincode')?.errors?.['pattern']">Pincode must be 6 digits.</span>
+        </div>
+      </div>
+
+      <!-- Submit -->
+      <button class="btn btn-primary w-100 btn-lg" [disabled]="deliveryForm.invalid || isSubmitting">
+        {{ isSubmitting ? 'Adding Delivery Partner...' : 'Add Delivery Partner' }}
+      </button>
+
+    </form>
+  </div>
+</div>

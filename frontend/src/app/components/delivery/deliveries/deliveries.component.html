@@ -1,0 +1,81 @@
+<div class="delivery-container">
+  <h2 class="title">My Deliveries</h2>
+
+  <div class="header-actions">
+    <div class="tabs">
+      <button [class.active]="activeTab === 'OUT_FOR_DELIVERY'" (click)="setTab('OUT_FOR_DELIVERY')">
+        Active Tasks
+      </button>
+      <button [class.active]="activeTab === 'DELIVERED'" (click)="setTab('DELIVERED')">
+        History
+      </button>
+    </div>
+
+    <div class="search-box">
+      <input type="text" placeholder="Search by name or ID..." [(ngModel)]="searchTerm" (input)="applyFilter()">
+    </div>
+  </div>
+
+  <div class="table-responsive">
+    <table class="delivery-table">
+      <thead>
+        <tr>
+          <th (click)="sort('_id')">Order ID ↕</th>
+          <th (click)="sort('name')">Customer ↕</th>
+          <th>Address</th>
+          <th (click)="sort('totalAmount')">Amount ↕</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let order of filteredDeliveries">
+          <td>#{{ order._id.slice(-6).toUpperCase() }}</td>
+          <td>{{ order.name }}</td>
+          <td>{{ order.addressLine }}, {{ order.city }}</td>
+          <td>₹{{ order.totalAmount }}</td>
+          <td>
+            <button *ngIf="order.status === 'OUT_FOR_DELIVERY'" 
+                    class="btn-deliver" 
+                    (click)="markAsDelivered(order._id)">
+              Mark Delivered
+            </button>
+            <span *ngIf="order.status === 'DELIVERED'" class="status-badge">Completed</span>
+          </td>
+        </tr>
+        <tr *ngIf="filteredDeliveries.length === 0">
+          <td colspan="5" class="no-data">No deliveries found.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="modal fade" id="otpModal" tabindex="-1" role="dialog" style="background: rgba(0,0,0,0.6);">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content custom-modal">
+      <div class="modal-header charcoal-header">
+        <h5 class="modal-title">Verify Delivery</h5>
+        <button type="button" class="btn-close btn-close-white" (click)="closeModal()"></button>
+      </div>
+      <div class="modal-body text-center py-4">
+        <div class="icon-circle mb-3">
+          <i class="fa fa-shield-check fa-2x"></i>
+        </div>
+        <p class="modal-instruction">Enter the 6-digit OTP provided by the customer to complete the delivery.</p>
+        
+        <input type="text" 
+               class="otp-input-field" 
+               placeholder="000000" 
+               maxlength="6" 
+               [(ngModel)]="otpInput"
+               [disabled]="isVerifying">
+      </div>
+      <div class="modal-footer border-0">
+        <button type="button" class="btn btn-outline-secondary" (click)="closeModal()" [disabled]="isVerifying">Cancel</button>
+        <button type="button" class="btn btn-charcoal" (click)="confirmDelivery()" [disabled]="isVerifying">
+          {{ isVerifying ? 'Verifying...' : 'Confirm Delivery' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

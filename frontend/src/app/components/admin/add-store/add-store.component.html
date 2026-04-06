@@ -31,8 +31,21 @@
 
       <!-- Store Name -->
       <div class="form-floating mb-3">
-        <input class="form-control" placeholder="Store Name" formControlName="name">
+        <input class="form-control"
+               placeholder="Store Name"
+               formControlName="name"
+               [class.is-invalid]="isInvalid('name')">
+
         <label>Store Name</label>
+
+        <div *ngIf="isInvalid('name')" class="text-danger small mt-1">
+          <span *ngIf="storeForm.get('name')?.errors?.['required']">
+            Store name is required.
+          </span>
+          <span *ngIf="storeForm.get('name')?.errors?.['minlength']">
+            Store name must be at least 3 characters.
+          </span>
+        </div>
       </div>
 
       <!-- Store Code Info -->
@@ -50,45 +63,103 @@
       <div class="form-floating mb-3">
         <input class="form-control"
                placeholder="Pincodes"
-               formControlName="servedPincodes">
+               formControlName="servedPincodes"
+               [class.is-invalid]="isInvalid('servedPincodes')">
+
         <label>Served Pincodes (comma separated)</label>
+
+        <div *ngIf="isInvalid('servedPincodes')" class="text-danger small mt-1">
+          Served pincodes are required.
+        </div>
       </div>
 
-      <!-- Address Fields -->
+      <!-- Address Line 1 -->
       <div class="form-floating mb-3">
-        <input class="form-control" placeholder="Line 1" formControlName="line1">
+        <input class="form-control"
+               placeholder="Line 1"
+               formControlName="line1"
+               [class.is-invalid]="isInvalid('line1')">
+
         <label>Address Line 1</label>
+
+        <div *ngIf="isInvalid('line1')" class="text-danger small mt-1">
+          Address line 1 is required.
+        </div>
       </div>
 
+      <!-- Area -->
       <div class="form-floating mb-3">
-        <input class="form-control" placeholder="Area" formControlName="area">
+        <input class="form-control"
+               placeholder="Area"
+               formControlName="area"
+               [class.is-invalid]="isInvalid('area')">
+
         <label>Area</label>
+
+        <div *ngIf="isInvalid('area')" class="text-danger small mt-1">
+          Area is required.
+        </div>
       </div>
 
+      <!-- City -->
       <div class="form-floating mb-3">
-        <input class="form-control" placeholder="City" formControlName="city">
+        <input class="form-control"
+               placeholder="City"
+               formControlName="city"
+               [class.is-invalid]="isInvalid('city')">
+
         <label>City</label>
+
+        <div *ngIf="isInvalid('city')" class="text-danger small mt-1">
+          City is required.
+        </div>
       </div>
 
+      <!-- Pincode -->
       <div class="form-floating mb-3">
-        <input class="form-control" placeholder="Pincode" formControlName="pincode">
+        <input class="form-control"
+               placeholder="Pincode"
+               formControlName="pincode"
+               [class.is-invalid]="isInvalid('pincode')">
+
         <label>Pincode</label>
+
+        <div *ngIf="isInvalid('pincode')" class="text-danger small mt-1">
+          Pincode is required.
+        </div>
       </div>
 
+      <!-- State -->
       <div class="form-floating mb-3">
-        <input class="form-control" placeholder="State" formControlName="state">
+        <input class="form-control"
+               placeholder="State"
+               formControlName="state"
+               [class.is-invalid]="isInvalid('state')">
+
         <label>State</label>
+
+        <div *ngIf="isInvalid('state')" class="text-danger small mt-1">
+          State is required.
+        </div>
       </div>
 
       <!-- Manager Dropdown -->
       <div class="form-floating mb-4">
-        <select class="form-select" formControlName="manager">
+        <select class="form-select"
+                formControlName="manager"
+                [class.is-invalid]="isInvalid('manager')">
+
           <option value="" disabled>Select Manager</option>
           <option *ngFor="let m of managers" [value]="m._id">
             {{ m.name }}
           </option>
         </select>
+
         <label>Manager</label>
+
+        <div *ngIf="isInvalid('manager')" class="text-danger small mt-1">
+          Manager selection is required.
+        </div>
       </div>
 
       <!-- Submit -->

@@ -83,6 +83,15 @@ const userSchema = new mongoose.Schema(
         return this.role === 'STORE_MANAGER';
       },
     },
+    deliveryStatus: {
+      type: String,
+      enum: ['AVAILABLE', 'ASSIGNED', 'OFF_DUTY'],
+      default: 'AVAILABLE',
+      required: function () {
+        return this.role === 'DELIVERY';
+      },
+    },
+    
     loginAttempts: {
       type: Number,
       default: 0

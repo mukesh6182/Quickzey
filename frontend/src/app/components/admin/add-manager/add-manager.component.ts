@@ -32,6 +32,10 @@ export class AddManagerComponent implements OnInit {
       password: ['', [Validators.required, Validators.minLength(6)]]
     });
   }
+  isInvalid(controlName: string): boolean {
+    const control = this.managerForm.get(controlName);
+    return !!(control && control.invalid && (control.dirty || control.touched));
+  }
 
   onSubmit() {
     if (this.managerForm.invalid) return;

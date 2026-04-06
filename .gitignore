@@ -2,6 +2,8 @@
 backend/node_modules/
 frontend/node_modules/
 
+backend/uploads/
+
 # Ignore .env files in both backend and frontend
 backend/.env
 frontend/.env

@@ -4,6 +4,7 @@ import { FooterComponent } from '../../customer/footer/footer.component';
 import { RouterOutlet } from '@angular/router';
 import { HeaderComponent } from '../../customer/header/header.component';
 
+
 @Component({
   selector: 'app-customer-layout',
   imports: [HeaderComponent,RouterOutlet, NavbarComponent, FooterComponent],

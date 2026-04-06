@@ -7,7 +7,11 @@ const {
   getStore,
   updateStore,
   deleteStore,
-  setMaintenance
+  setMaintenance,
+  getOrdersByStore,
+  updateOrderStatus,
+  getTopNearbyDeliveryPartners,
+  assignDeliveryPartner
 } = require('../controllers/StoreController');
 
 const {getAvailableManagers} = require('../controllers/UserController');
@@ -30,4 +34,9 @@ router.delete("/delete-store/:id", authMiddleware, authorizeRole("ADMIN"), delet
 
 router.post("/maintenance-store/:id", authMiddleware, authorizeRole("ADMIN"), setMaintenance);
 
+router.get("/orders", authMiddleware, authorizeRole("STORE_MANAGER"), getOrdersByStore);
+router.patch("/order-status/:orderId",authMiddleware,authorizeRole("STORE_MANAGER"),updateOrderStatus);
+router.get("/nearby-delivery-partners", authMiddleware, authorizeRole("STORE_MANAGER"), 
+getTopNearbyDeliveryPartners);
+router.post("/assign-partner", authMiddleware, authorizeRole("STORE_MANAGER"), assignDeliveryPartner);
 module.exports = router;

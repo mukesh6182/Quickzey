@@ -38,24 +38,29 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  // ✅ HANDLE GOOGLE LOGIN ERRORS HERE
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
+      // Show message if user was redirected to login
+      const message = params['message'];
       const error = params['error'];
 
+      if (message) {
+        this.toastMessage = message;
+        this.toastType = 'danger'; // redirect messages are warning-style
+        setTimeout(() => this.toastMessage = null, 5000);
+
+        // Optional: remove query params from URL
+        this.router.navigate([], { queryParams: {}, replaceUrl: true });
+      }
+
+      // Handle manual account error from Google login
       if (error === 'manual_account') {
         this.toastMessage =
           'This email is registered manually. Please login using email and password.';
         this.toastType = 'danger';
-
-        // Auto dismiss toast
         setTimeout(() => this.toastMessage = null, 5000);
 
-        // Optional: clean URL
-        this.router.navigate([], {
-          queryParams: {},
-          replaceUrl: true
-        });
+        this.router.navigate([], { queryParams: {}, replaceUrl: true });
       }
     });
   }
@@ -79,8 +84,8 @@ export class LoginComponent implements OnInit {
             const role = res.role?.toUpperCase();
             switch (role) {
               case 'ADMIN': this.router.navigate(['/admin']); break;
-              case 'STORE_MANAGER': this.router.navigate(['/manager/dashboard']); break;
-              case 'DELIVERY': this.router.navigate(['/delivery/dashboard']); break;
+              case 'STORE_MANAGER': this.router.navigate(['/manager']); break;
+              case 'DELIVERY': this.router.navigate(['/delivery']); break;
               default: this.router.navigate(['/']); break;
             }
           }, 3000);

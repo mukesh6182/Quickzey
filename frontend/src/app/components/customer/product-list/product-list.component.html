@@ -1,0 +1,83 @@
+<div class="container my-4">
+  <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+    <h2 class="section-title fw-bold">Available Products</h2>
+
+    <div class="filter-box">
+      <label class="me-2 fw-bold text-muted">Filter By:</label>
+      <select class="form-select d-inline-block w-auto border-teal" [(ngModel)]="selectedSubCatId" (change)="onFilterChange()">
+        <option value="">All Products</option>
+        <option *ngFor="let sub of subCategories" [value]="sub._id">{{ sub.name }}</option>
+      </select>
+    </div>
+  </div>
+
+  <hr>
+
+  <div class="row g-4" *ngIf="filteredProducts.length > 0; else noProducts">
+    <div class="col-6 col-md-4 col-lg-3" *ngFor="let item of filteredProducts">
+      <div class="card h-100 shadow-sm border-0 product-card">
+        
+        <div class="p-3 text-center bg-light-gray cursor-pointer" [routerLink]="['/product', item._id]">
+          <img [src]="serverUrl + '/' + item.product.images[0]" class="img-fluid product-img" alt="{{ item.product.name }}">
+        </div>
+
+        <div class="card-body d-flex flex-column">
+          <h6 class="fw-bold cursor-pointer title-hover" [routerLink]="['/product', item._id]">
+            {{ item.product.name }}
+          </h6>
+          
+          <p class="text-muted small mb-1">{{ item.product.subCategory?.name }}</p>
+          
+          <div class="mt-auto">
+            <h5 class="fw-bold" style="color: #008080;">₹{{ item.product.price }}</h5>
+            
+            <button 
+              (click)="openQuantityModal(item)" 
+              class="btn w-100 mt-2 btn-sm py-2 rounded-3 custom-btn-teal shadow-sm"
+            >
+              Add to Cart
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="qtyModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-0 shadow-lg rounded-4">
+        <div class="modal-header border-0">
+          <h5 class="modal-title fw-bold">Select Quantity</h5>
+          <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body text-center" *ngIf="selectedProduct">
+          <img [src]="serverUrl + '/' + selectedProduct.product.images[0]" style="height: 120px; object-fit: contain;" class="mb-3">
+          <h5 class="fw-bold">{{ selectedProduct.product.name }}</h5>
+          <p class="text-muted">Price per unit: ₹{{ selectedProduct.product.price }}</p>
+
+          <div class="d-flex justify-content-center align-items-center gap-4 my-4">
+            <button class="btn btn-outline-teal rounded-circle shadow-sm qty-btn" (click)="adjustTempQty(-1)">-</button>
+            <span class="fs-4 fw-bold text-dark">{{ tempQuantity }}</span>
+            <button class="btn btn-outline-teal rounded-circle shadow-sm qty-btn" (click)="adjustTempQty(1)">+</button>
+          </div>
+        </div>
+        <div class="modal-footer border-0 p-3">
+          <button 
+            type="button" 
+            class="btn w-100 py-3 fw-bold custom-btn-teal rounded-pill shadow" 
+            (click)="confirmAdd()"
+          >
+            Confirm - ₹{{ (selectedProduct?.product?.price || 0) * tempQuantity }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #noProducts>
+    <div class="text-center py-5">
+        <i class="fas fa-box-open fa-3x text-muted mb-3"></i>
+        <p class="fs-5 text-muted">No products available for this pincode.</p>
+    </div>
+  </ng-template>
+</div>

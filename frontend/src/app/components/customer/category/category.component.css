@@ -1,80 +1,179 @@
-/* Section heading */
-.category-heading {
-  font-weight: 700;
-  font-size: 1.8rem;
-  color: #222;
+/* 1. The Core Setup - High-end Typography */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&display=swap');
+
+:root {
+  --teal-accent: #00d1c1;
+  --glass-bg: rgba(255, 255, 255, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.4);
+  --shadow-soft: 0 8px 32px 0 rgba(0, 0, 0, 0.05);
+  --shadow-hover: 0 20px 40px 0 rgba(0, 209, 193, 0.15);
 }
 
-/* Category box */
+/* 2. The Header - Minimal & Modern */
+.category-heading {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 800;
+  font-size: 2.2rem;
+  color: #121212;
+  letter-spacing: -0.04em;
+  margin-bottom: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.category-heading::before {
+  content: "";
+  width: 8px;
+  height: 35px;
+  background: var(--teal-accent);
+  border-radius: 10px;
+}
+
+/* 3. The Grid - Use CSS Grid for performance */
+.category-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 20px;
+  padding: 10px;
+}
+
+/* 4. The Category Box - Smooth & Stylish */
 .category-box {
-  background-color: #ffffff;
-  border: 1px solid #e6e6e6;
-  border-radius: 12px;
-  padding: 18px 10px;
-  transition: border-color 0.25s ease, box-shadow 0.25s ease;
-  cursor: pointer;
-  height: 100%;
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px); /* Frosted Glass Effect */
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  border-radius: 28px; /* Smooth Bento Roundedness */
+  padding: 24px 16px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  text-decoration: none;
+  position: relative;
+  /* GPU Acceleration: Using translate3d for no-lag performance */
+  transform: translate3d(0, 0, 0);
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), 
+              box-shadow 0.4s ease, 
+              background 0.3s ease;
+  box-shadow: var(--shadow-soft);
+  cursor: pointer;
 }
 
-/* Hover effect (subtle & professional) */
+/* 5. Hover State - The "Pop" effect */
 .category-box:hover {
-  border-color: teal;
-  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
+  transform: translate3d(0, -10px, 0) scale(1.02);
+  background: #ffffff;
+  border-color: var(--teal-accent);
+  box-shadow: var(--shadow-hover);
 }
 
-/* Image wrapper to fix transparent PNG background */
+/* 6. Image Wrapper - Floating Element */
 .category-img-wrapper {
-  background-color: #ffffff; /* forces white background */
-  border-radius: 50%;        /* circular container */
-  padding: 10px;             /* spacing around image */
+  width: 90px;
+  height: 90px;
+  margin-bottom: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 10px;
-  width: 80px;
-  height: 80px;
-  transition: transform 0.3s ease;
+  transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-/* Image inside wrapper */
 .category-img-wrapper img {
-  width: 100px;
-  height: 100px;
+  width: 100%;
+  height: 100%;
   object-fit: contain;
+  /* Soft product shadow */
+  filter: drop-shadow(0 10px 15px rgba(0,0,0,0.08));
 }
 
-/* Hover pop effect for image */
 .category-box:hover .category-img-wrapper {
-  transform: scale(1.1); /* image slightly pops */
+  transform: translate3d(0, -5px, 0) rotate(5deg) scale(1.1);
 }
 
-/* Category name */
+/* 7. The Text - Clean & Professional */
 .category-name {
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: #333;
-  margin: 0;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #1a1a1a;
   text-align: center;
+  transition: color 0.3s ease;
 }
 
-/* Mobile optimization */
+.category-box:hover .category-name {
+  color: var(--teal-accent);
+}
+
+/* 8. Modern Element: The "Active Line" */
+.category-box::after {
+  content: "";
+  position: absolute;
+  bottom: 12px;
+  width: 0;
+  height: 3px;
+  background: var(--teal-accent);
+  border-radius: 2px;
+  transition: width 0.3s ease;
+}
+
+.category-box:hover::after {
+  width: 30%;
+}
+.coming-soon-message {
+  font-size: 28px;
+  font-weight: 600;
+  color: #ff5722;
+  margin-top: 60px;
+}
+
+.sub-text {
+  font-size: 16px;
+  color: #777;
+  font-weight: 400;
+}
+.empty-state {
+  padding: 80px 20px;
+  background: #f8f9fb;
+  border-radius: 16px;
+  margin-top: 40px;
+  font-family: 'Poppins', 'Segoe UI', sans-serif; /* Premium font */
+}
+
+.empty-icon {
+  font-size: 70px;          /* slightly bigger for premium feel */
+  color: #008080;           /* Teal color */
+  margin-bottom: 25px;
+}
+
+.empty-title {
+  font-size: 26px;
+  font-weight: 700;          /* bolder */
+  color: #222;
+  margin-bottom: 20px;
+  letter-spacing: 0.5px;    /* adds premium spacing */
+}
+
+.empty-description {
+  font-size: 17px;
+  color: #555;
+  max-width: 520px;
+  margin: 0 auto 12px;
+  font-weight: 500;          /* medium weight for readability */
+  line-height: 1.6;          /* better spacing */
+}
+
+.empty-subtext {
+  font-size: 15px;
+  color: #777;
+  font-weight: 500;
+}
+
+
+/* Mobile - Optimize for Thumbs */
 @media (max-width: 576px) {
-  .category-img-wrapper {
-    width: 65px;
-    height: 65px;
-    padding: 8px;
-  }
-
-  .category-img-wrapper img {
-    width: 50px;
-    height: 50px;
-  }
-
-  .category-name {
-    font-size: 0.85rem;
-  }
+  .category-container { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .category-box { padding: 20px 12px; border-radius: 20px; }
+  .category-img-wrapper { width: 70px; height: 70px; }
 }

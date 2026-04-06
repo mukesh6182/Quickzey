@@ -1,5 +1,7 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, Inject, PLATFORM_ID } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { Router } from '@angular/router'; // Added Router for navigation
+import { StoreService } from '../../../services/store.service';
 
 @Component({
   selector: 'app-category',
@@ -8,18 +10,50 @@ import { CommonModule } from '@angular/common';
   templateUrl: './category.component.html',
   styleUrls: ['./category.component.css']
 })
-export class CategoryComponent {
+export class CategoryComponent implements OnInit {
+  categories: any[] = [];
+  pincode: string = ''; 
+  serverUrl = 'http://localhost:4000';
 
-  categories = [
-    { title: 'Stationery', image: 'assets/categories/stationery.png' },
-    { title: 'Biscuits', image: 'assets/categories/biscuits.png' },
-    { title: 'Ice Creams', image: 'assets/categories/icecream.png' },
-    { title: 'Snacks', image: 'assets/categories/snacks.png' },
-    { title: 'Sweets', image: 'assets/categories/sweets.png' },
-    { title: 'Chocolates & Candies', image: 'assets/categories/chocolates.png' },
-    { title: 'Drinks & Beverages', image: 'assets/categories/drinks.png' },
-    { title: 'Dairy', image: 'assets/categories/dairy.png' },
-    { title: 'Kitchen Essentials', image: 'assets/categories/kitchen.png' },    
-  ];
+  constructor(
+    private storeService: StoreService,
+    private router: Router, // Injected Router
+    @Inject(PLATFORM_ID) private platformId: Object
+  ) {}
 
+  ngOnInit(): void {
+    // MODIFIED: Subscribe to pincode changes from service
+    this.storeService.pincode$.subscribe((newPin) => {
+      this.pincode = newPin;
+      this.loadCategories(); 
+    });
+  }
+
+  loadCategories() {
+    if (!this.pincode) return;
+    
+    this.storeService.getCategoriesByPincode(this.pincode).subscribe({
+      next: (res: any) => {
+        this.categories = res.categories.map((cat: any) => ({
+          id: cat._id, // Store the ID for navigation
+          title: cat.name,
+          image: cat.image ? `${this.serverUrl}/${cat.image}` : 'assets/categories/default.png'
+        }));
+      },
+      error: (err) => {
+        console.error('Error loading categories:', err);
+        this.categories = [];
+      }
+    });
+  }
+
+  /**
+   * Navigates to the products page with the selected category ID
+   */
+  viewProducts(categoryId: string) {
+    if (!categoryId) return;
+    this.router.navigate(['/products'], { 
+      queryParams: { category: categoryId } 
+    });
+  }
 }

@@ -1,0 +1,5 @@
+@import '../manage-category/manage-category.component.css';
+.inside-modal-overlay {
+  position: fixed !important;
+  z-index: 1055 !important; /* Bootstrap modal is 1050, so we go higher */
+}

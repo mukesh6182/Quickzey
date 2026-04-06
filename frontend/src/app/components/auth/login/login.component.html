@@ -73,10 +73,14 @@
               </div>
             </div>
 
+            <div class="text-end mb-3">
+              <a routerLink="/forgot-password" class="text-primary fw-semibold text-decoration-none small">
+                Forgot password?
+              </a>
+            </div>
+
             <!-- Login Button -->
-            <button
-              class="btn btn-primary w-100 btn-lg mb-3"
-              [disabled]="loginForm.invalid">
+            <button class="btn btn-primary w-100 btn-lg mb-3" [disabled]="loginForm.invalid">
               Login
             </button>
 

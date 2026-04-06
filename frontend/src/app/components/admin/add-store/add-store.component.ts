@@ -72,6 +72,10 @@ export class AddStoreComponent {
       error: () => this.lastStoreMessage = null
     });
   }
+  isInvalid(controlName: string): boolean {
+    const control = this.storeForm.get(controlName);
+    return !!(control && control.invalid && (control.dirty || control.touched));
+  }
 
   onSubmit() {
     if (this.storeForm.invalid) return;

@@ -1,0 +1,99 @@
+.delivery-container { 
+  padding: 2rem; 
+  font-family: 'Poppins', sans-serif; 
+  background-color: #f8f9fa; 
+  min-height: 100vh;
+}
+
+.title { color: #2c3e50; margin-bottom: 1.5rem; font-weight: 700; }
+
+.header-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* Tabs Styling */
+.tabs button {
+  padding: 10px 24px;
+  border: 1px solid #d1d5db;
+  background: #ffffff;
+  color: #4b5563;
+  cursor: pointer;
+  font-weight: 600;
+  border-radius: 8px;
+  margin-right: 10px;
+  transition: all 0.3s ease;
+}
+
+.tabs button.active { 
+  background: #36454f; 
+  color: white; 
+  border-color: #36454f;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.tabs button:hover:not(.active) {
+  background: #e5e7eb;
+  color: #1f2937;
+}
+
+.search-box input {
+  padding: 10px 15px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  width: 280px;
+  outline: none;
+}
+
+.search-box input:focus { border-color: #36454f; }
+
+/* Table Styling */
+.table-responsive { background: white; border-radius: 12px; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); overflow: hidden; }
+.delivery-table { width: 100%; border-collapse: collapse; text-align: left; }
+.delivery-table th { background: #36454f; color: #ffffff; padding: 18px 15px; cursor: pointer; }
+.delivery-table td { padding: 16px 15px; border-bottom: 1px solid #f3f4f6; color: #374151; }
+.delivery-table tr:hover { background-color: #f9fafb; }
+
+.btn-deliver {
+  background: #36454f;
+  color: white;
+  border: none;
+  padding: 9px 18px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.btn-deliver:hover { background: #4a5d6a; }
+
+.status-badge {
+  background: #f3f4f6;
+  color: #6b7280;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+/* --- MODAL CUSTOM STYLES --- */
+.custom-modal { border-radius: 15px; border: none; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.2); }
+.charcoal-header { background: #36454f; color: white; border-top-left-radius: 15px; border-top-right-radius: 15px; }
+.icon-circle { background: #f3f4f6; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto; color: #36454f; }
+.modal-instruction { font-size: 0.95rem; color: #6b7280; padding: 0 20px; }
+.otp-input-field {
+  width: 80%;
+  font-size: 2rem;
+  text-align: center;
+  letter-spacing: 0.8rem;
+  padding: 10px;
+  border: 2px solid #e5e7eb;
+  border-radius: 10px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.otp-input-field:focus { border-color: #36454f; }
+.btn-charcoal { background: #36454f; color: white; padding: 10px 20px; border-radius: 8px; }
+.btn-charcoal:hover { background: #2c3e50; color: white; }

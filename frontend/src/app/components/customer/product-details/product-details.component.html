@@ -1,0 +1,72 @@
+<div class="container my-5" *ngIf="productData">
+  <div class="product-detail-wrapper mx-auto">
+    <div class="row g-4 d-flex align-items-stretch">
+      
+      <div class="col-md-5 d-flex flex-column">
+        <div class="main-img-container shadow-sm rounded-4 p-3 bg-white mb-2 flex-grow-1 d-flex align-items-center justify-content-center">
+          <img [src]="serverUrl + '/' + mainImage" class="img-fluid main-img" alt="Product Image">
+        </div>
+        <div class="d-flex gap-2">
+          <div *ngFor="let img of productData.product.images" 
+               (click)="setMainImage(img)"
+               class="thumb-container border rounded-3 p-1 cursor-pointer"
+               [class.active-thumb]="mainImage === img">
+            <img [src]="serverUrl + '/' + img" class="img-fluid thumb-img">
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-7">
+        <div class="product-info-card border-0 shadow-sm rounded-4 p-4 h-100 d-flex flex-column">
+          <nav aria-label="breadcrumb" class="mb-1">
+            <ol class="breadcrumb mb-0">
+              <li class="breadcrumb-item text-teal small fw-bold">{{productData.product.category.name}}</li>
+              <li class="breadcrumb-item active small">{{productData.product.subCategory.name}}</li>
+            </ol>
+          </nav>
+
+          <h2 class="fw-bold mb-1">{{productData.product.name}}</h2>
+          <hr class="my-2 opacity-10">
+          
+          <p class="text-muted mb-4 description-text">{{productData.product.description}}</p>
+
+          <div class="price-section mt-1">
+            <div class="d-flex align-items-center mb-3">
+              <h3 class="text-teal fw-bold mb-0">₹{{productData.product.price}}</h3>
+            </div>
+
+            <button (click)="openQuantityModal()" class="btn btn-teal-full w-100 py-1 rounded-pill fw-bold shadow-sm">
+              ADD TO CART
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="qtyModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+      <div class="modal-content border-0 shadow-lg rounded-4">
+        <div class="modal-header border-0 pb-0">
+          <h6 class="modal-title fw-bold text-center w-100">Select Quantity</h6>
+          <button type="button" class="btn-close small shadow-none" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body text-center py-3">
+          <img [src]="serverUrl + '/' + mainImage" style="height: 80px; object-fit: contain;" class="mb-2">
+          <h6 class="fw-bold mb-1 small">{{ productData.product.name }}</h6>
+          
+          <div class="d-flex justify-content-center align-items-center gap-3 my-3">
+            <button class="btn btn-outline-teal rounded-circle qty-btn-sm" (click)="updateQty(-1)">-</button>
+            <span class="fw-bold fs-5">{{ quantity }}</span>
+            <button class="btn btn-outline-teal rounded-circle qty-btn-sm" (click)="updateQty(1)">+</button>
+          </div>
+        </div>
+        <div class="modal-footer border-0 p-3 pt-0">
+          <button type="button" class="btn btn-sm w-100 py-2 fw-bold btn-teal-full rounded-pill shadow-sm" (click)="confirmAdd()">
+            Confirm - ₹{{ productData.product.price * quantity }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

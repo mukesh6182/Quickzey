@@ -1,0 +1,98 @@
+<div class="container my-5">
+  <div class="row justify-content-center">
+    <div class="col-md-5">
+      
+      <div class="card shadow-lg border-0 rounded-4 overflow-hidden" *ngIf="!loading">
+        <div class="bg-teal p-5 text-center position-relative">
+          <div class="avatar-container shadow-lg mx-auto bg-white rounded-circle d-flex align-items-center justify-content-center">
+            <i class="fas fa-user text-teal fs-1"></i>
+          </div>
+        </div>
+
+        <div class="card-body p-4 pt-5 mt-2">
+          <div class="text-center mb-4">
+            <h3 class="fw-bold text-dark mb-0">{{ user.name }}</h3>
+            <span class="badge rounded-pill bg-light text-teal border border-teal px-3 py-2 mt-2">
+              <i class="fas fa-shield-alt me-1"></i> {{ user.role || 'Customer' }}
+            </span>
+          </div>
+
+          <div *ngIf="message" class="alert alert-success py-2 small text-center">{{ message }}</div>
+
+          <hr class="opacity-10">
+
+          <div class="detail-item d-flex align-items-center mb-3 p-2 rounded-3">
+            <div class="icon-box me-3"><i class="fas fa-envelope"></i></div>
+            <div>
+              <p class="small text-muted mb-0">Email Address</p>
+              <h6 class="fw-bold mb-0">{{ user.email }}</h6>
+            </div>
+          </div>
+
+          <div class="detail-item d-flex align-items-center mb-3 p-2 rounded-3">
+            <div class="icon-box me-3"><i class="fas fa-phone-alt"></i></div>
+            <div>
+              <p class="small text-muted mb-0">Phone Number</p>
+              <h6 class="fw-bold mb-0">{{ user.phone || 'Not Provided' }}</h6>
+            </div>
+          </div>
+
+          <div class="detail-item d-flex align-items-center mb-4 p-2 rounded-3">
+            <div class="icon-box me-3"><i class="fas fa-calendar-check"></i></div>
+            <div>
+              <p class="small text-muted mb-0">Account Status</p>
+              <h6 class="fw-bold mb-0 text-success">{{ user.status }}</h6>
+            </div>
+          </div>
+
+          <button (click)="openEditModal()" class="btn btn-teal-full w-100 py-3 rounded-pill fw-bold shadow">
+            UPDATE PROFILE DETAILS
+          </button>
+        </div>
+      </div>
+
+      <div *ngIf="loading" class="text-center py-5">
+        <div class="spinner-border text-teal" role="status"></div>
+        <p class="text-muted mt-2">Fetching profile...</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="updateProfileModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-0 shadow-lg rounded-4">
+        <div class="modal-header border-0 pb-0 pt-4 px-4">
+          <h5 class="fw-bold">Edit Profile</h5>
+          <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body p-4">
+          <form #editForm="ngForm">
+            <div class="mb-3">
+              <label class="small fw-bold mb-1">Full Name</label>
+              <div class="input-group">
+                <span class="input-group-text bg-light border-0"><i class="fas fa-user text-muted"></i></span>
+                <input type="text" class="form-control bg-light border-0 shadow-none" [(ngModel)]="editData.name" name="name" required>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label class="small fw-bold mb-1">Phone Number</label>
+              <div class="input-group">
+                <span class="input-group-text bg-light border-0"><i class="fas fa-phone text-muted"></i></span>
+                <input type="text" class="form-control bg-light border-0 shadow-none" [(ngModel)]="editData.phone" name="phone" maxlength="10">
+              </div>
+            </div>
+
+            <div class="alert alert-warning p-2 small border-0 mt-4">
+              <i class="fas fa-info-circle me-1"></i> Email address is linked to your login and cannot be modified.
+            </div>
+
+            <button type="button" (click)="saveProfile()" [disabled]="!editData.name" class="btn btn-teal-full w-100 py-2 mt-2 rounded-pill fw-bold shadow">
+              SAVE UPDATES
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

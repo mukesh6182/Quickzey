@@ -1,17 +1,22 @@
-/* 1. Main Container Setup */
-.register-container {
-  min-height: 100vh; /* Takes at least full screen */
-  background: #fff;
+/* 0. Ensure full height of html and body */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
   overflow-x: hidden;
 }
 
-/* 2. The Image Wrapper Logic */
-/* This is crucial. We make the image 'absolute' so it doesn't push the div open. 
-   It simply fills whatever space the div has. */
+/* 1. Main Container Setup */
+.register-container {
+  min-height: 100vh; /* full viewport */
+  display: flex;
+  flex-direction: row;
+  overflow-x: hidden;
+}
+
+/* 2. Image Wrapper */
 .image-wrapper {
-  position: absolute;
-  top: 0;
-  left: 0;
+  position: relative; /* change from absolute to relative */
   width: 100%;
   height: 100%;
 }
@@ -19,22 +24,27 @@
 .image-wrapper img {
   width: 100%;
   height: 100%;
-  object-fit: cover; /* Crops the image nicely to prevent stretching */
+  object-fit: cover;
   object-position: center;
+  display: block;
 }
 
 /* 3. Form Side Styling */
 .register-form-wrapper {
   background-color: #fff;
   width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh; /* ensures no gap */
 }
 
 .form-card {
   width: 100%;
-  max-width: 500px; /* Limits width so it looks good on huge screens */
+  max-width: 500px;
 }
 
-/* 4. Stylish Inputs (Floating Labels) */
+/* 4. Inputs (Floating Labels) */
 .form-floating > .form-control {
   border: 1px solid #e0e0e0;
   background-color: #fcfcfc;
@@ -88,23 +98,28 @@
   line-height: 0.1em;
   margin: 20px 0;
 }
+
 .divider span {
-  background:#fff; 
-  padding:0 10px; 
+  background: #fff;
+  padding: 0 10px;
 }
+
+/* Alerts */
 .alert {
   border-radius: 8px;
   font-size: 14px;
   padding: 12px 16px;
-  background-color: #fff5f5; /* Very light red */
-  color: #c0392b; /* Deep professional red */
-  border-left: 4px solid #e74c3c !important; /* Bold left accent */
+  background-color: #fff5f5;
+  color: #c0392b;
+  border-left: 4px solid #e74c3c !important;
 }
 
 .alert .btn-close {
   font-size: 10px;
   padding: 1.25rem;
 }
+
+/* Toasts */
 .modern-toast-wrapper {
   position: fixed;
   top: 25px;
@@ -119,7 +134,7 @@
   border-radius: 12px;
   display: flex;
   overflow: hidden;
-  border: 1px solid rgba(0,0,0,0.08);
+  border: 1px solid rgba(0, 0, 0, 0.08);
   box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1) !important;
   animation: toastPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.2) forwards;
 }
@@ -130,11 +145,21 @@
 }
 
 /* State Colors */
-.modern-toast-card.success .toast-accent { background-color: #00b894; }
-.modern-toast-card.success .toast-icon { color: #00b894; }
+.modern-toast-card.success .toast-accent {
+  background-color: #00b894;
+}
 
-.modern-toast-card.danger .toast-accent { background-color: #ff7675; }
-.modern-toast-card.danger .toast-icon { color: #ff7675; }
+.modern-toast-card.success .toast-icon {
+  color: #00b894;
+}
+
+.modern-toast-card.danger .toast-accent {
+  background-color: #ff7675;
+}
+
+.modern-toast-card.danger .toast-icon {
+  color: #ff7675;
+}
 
 .toast-content {
   padding: 14px 18px;
@@ -144,9 +169,13 @@
   width: 100%;
 }
 
-.toast-icon { font-size: 22px; }
+.toast-icon {
+  font-size: 22px;
+}
 
-.toast-body-text { flex-grow: 1; }
+.toast-body-text {
+  flex-grow: 1;
+}
 
 .toast-status {
   display: block;
@@ -174,9 +203,28 @@
   transition: color 0.2s;
 }
 
-.btn-toast-close:hover { color: #636e72; }
+.btn-toast-close:hover {
+  color: #636e72;
+}
 
 @keyframes toastPop {
-  0% { opacity: 0; transform: translateY(-30px); }
-  100% { opacity: 1; transform: translateY(0); }
+  0% {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive Fix for smaller screens */
+@media (max-width: 767px) {
+  .register-container {
+    flex-direction: column;
+  }
+  .register-form-wrapper {
+    min-height: auto;
+    padding: 40px 20px;
+  }
 }

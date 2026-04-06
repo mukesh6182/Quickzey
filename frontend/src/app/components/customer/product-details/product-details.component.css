@@ -1,0 +1,143 @@
+/* ==============================================
+   Product Detail Page - Premium Centered Style
+   ============================================== */
+
+/* ===== Body & Background ===== */
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f5f7fa, #e8f1f1);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* ===== Product Card Wrapper ===== */
+.product-detail-wrapper {
+  max-width: 900px;
+  width: 95%;
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: 
+    0 20px 40px rgba(0, 0, 0, 0.08),
+    0 8px 16px rgba(0, 0, 0, 0.04);
+  position: absolute;
+  top: 55%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+
+/* ===== Headings & Text ===== */
+.text-teal { 
+  color: #008080 !important; 
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.description-text {
+  line-height: 1.6;
+  font-size: 0.95rem;
+  margin-bottom: 2.25rem;
+  color: #555;
+}
+
+/* ===== Buttons ===== */
+.btn-teal-full { 
+  background: linear-gradient(135deg, #008080, #006666);
+  color: white !important; 
+  border: none; 
+  padding: 0.7rem 1.5rem;
+  font-weight: 600;
+  border-radius: 50px;
+  transition: all 0.3s ease;
+  box-shadow: 0 6px 15px rgba(0, 128, 128, 0.3);
+  cursor: pointer;
+}
+
+.btn-teal-full:hover { 
+  background: linear-gradient(135deg, #006666, #004d4d);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(0, 128, 128, 0.4);
+}
+
+/* ===== Image Container ===== */
+.main-img-container { 
+  height: 320px; 
+  background: #f9fdfd;
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  overflow: hidden;
+}
+
+.main-img { 
+  max-height: 280px; 
+  width: auto;
+  object-fit: contain; 
+  transition: transform 0.3s ease;
+}
+
+.main-img:hover {
+  transform: scale(1.05);
+}
+
+/* ===== Thumbnails ===== */
+.thumb-container { 
+  width: 65px; 
+  height: 65px; 
+  cursor: pointer; 
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  background: #f4f4f4;
+  display: inline-block;
+  margin-right: 0.5rem;
+}
+
+.thumb-img { 
+  height: 100%; 
+  width: 100%; 
+  object-fit: contain; 
+}
+
+.thumb-container:hover {
+  transform: scale(1.08);
+  box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+}
+
+.active-thumb { 
+  border: 2px solid #008080 !important; 
+  box-shadow: 0 4px 12px rgba(0, 128, 128, 0.3);
+}
+
+/* ===== Quantity Buttons ===== */
+.qty-btn-sm {
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #008080;
+  border: 1.5px solid #008080;
+  background: white;
+  font-weight: bold;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.qty-btn-sm:hover {
+  background: #008080;
+  color: white;
+  transform: scale(1.05);
+  cursor: pointer;
+}
+
+/* ===== Utility Classes ===== */
+.cursor-pointer { cursor: pointer; }
+.rounded-4 { border-radius: 1rem !important; }

@@ -8,6 +8,7 @@ import { isPlatformBrowser } from '@angular/common';
 })
 export class UserService {
   private baseUrl = 'http://localhost:4000/admin'; // admin routes
+  private customerUrl = 'http://localhost:4000/customer';
 
   constructor(
     private http: HttpClient,
@@ -55,4 +56,22 @@ export class UserService {
   getAvailableManagers(): Observable<any> {
     return this.http.get(`${this.baseUrl}/available-managers`, this.getHeaders());
   }
+  getProfile(): Observable<any> {
+    return this.http.get(`${this.customerUrl}/me`, this.getHeaders());
+  }
+
+  updateProfile(data: any): Observable<any> {
+    return this.http.put(`${this.customerUrl}/update-me`, data, this.getHeaders());
+  }
+
+  addDeliveryPartner(data: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/add-delivery-partner`, data, this.getHeaders());
+  }
+  // ... inside UserService class
+  private partnerUrl = 'http://localhost:4000/delivery'; // Update based on your route prefix
+
+  toggleStatus(): Observable<any> {
+    return this.http.patch(`${this.partnerUrl}/toggle-status`, {}, this.getHeaders());
+  }
+// ...
 }
